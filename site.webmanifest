@@ -1,0 +1,16 @@
+{
+  "name": "소포스에듀 Sophos Edu",
+  "short_name": "소포스에듀",
+  "description": "이촌동 중·고등 고전 읽기·국어·수학·내신·입시 컨설팅 — 실천적 지혜교육",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FBF7F0",
+  "theme_color": "#3E111B",
+  "lang": "ko",
+  "icons": [
+    {"src": "img/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "img/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

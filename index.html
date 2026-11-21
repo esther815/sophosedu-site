@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>소포스에듀 | 이촌동 중·고등 고전 읽기·국어·수학·입시 컨설팅</title>
+<title>소포스에듀 Sophos Edu | 이촌동 중·고등 고전 읽기·국어·수학·입시 컨설팅</title>
 <meta name="description" content="소포스에듀(Sophos Edu)는 서울 용산구 이촌동의 중·고등 실천적 지혜교육입니다. 장화연 대표 직강 고전 읽기 고원재, 국어·수학 소수정예 소포스 프라이빗, 학년별 내신 소포스 스테디, 1:1 입시 컨설팅.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website">
@@ -14,9 +14,19 @@
 <meta name="theme-color" content="#3E111B">
 <link rel="canonical" href="https://sophosedu.co.kr/">
 <meta property="og:url" content="https://sophosedu.co.kr/">
-<meta property="og:image" content="https://sophosedu.co.kr/img/library.jpg">
+<meta property="og:image" content="https://sophosedu.co.kr/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="소포스에듀 Sophos Edu — 실천적 지혜교육">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/png" href="img/icon.png">
+<meta name="twitter:image" content="https://sophosedu.co.kr/img/og.jpg">
+<link rel="icon" href="img/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="소포스에듀">
+<meta name="application-name" content="소포스에듀">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -332,6 +342,40 @@ section[id]{scroll-margin-top:84px}
 .bt-item time{grid-column:3;grid-row:1;font-size:13.5px;color:var(--muted);text-align:right}
 @media (max-width:760px){.bt-item{grid-template-columns:1fr}.bt-cat,.bt-d,.bt-item time{grid-column:1;grid-row:auto;text-align:left}}
 
+
+
+.brand img{transition:transform .5s cubic-bezier(.2,.7,.2,1),filter .5s}
+.brand:hover img{transform:translateY(-2px);filter:drop-shadow(0 6px 10px rgba(169,130,74,.45))}
+.brand .en{transition:letter-spacing .5s}
+.brand:hover .en{letter-spacing:.18em}
+
+.mlib{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;margin-top:40px;padding:26px 30px;background:var(--wine);color:var(--gold-p);text-decoration:none;border:1px solid var(--gold);transition:background .4s}
+.mlib:hover{background:var(--wine2)}
+.mlib .ic{width:58px;height:58px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold-l)}
+.mlib em{display:block;font-style:normal;font-family:var(--latin);letter-spacing:.32em;font-size:12.5px;color:var(--gold-l)}
+.mlib b{display:block;margin-top:2px;font-family:var(--serif);font-size:21px;color:#fff;line-height:1.45}
+.mlib .tx>span{display:block;margin-top:3px;font-size:14.5px;color:rgba(241,227,195,.8)}
+.mlib .go{font-weight:700;font-size:15px;white-space:nowrap;border-bottom:1px solid var(--gold-l);padding-bottom:2px}
+@media (max-width:700px){.mlib{grid-template-columns:1fr;gap:12px;padding:24px 22px}.mlib .ic{display:none}}
+/* 이벤트 팝업 */
+.ep-wrap{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:26px;padding:24px;background:rgba(30,10,15,.62);backdrop-filter:blur(3px)}
+.ep{width:min(370px,44vw);background:#FFFDF8;border:1px solid var(--gold-l);box-shadow:0 30px 70px rgba(0,0,0,.4);display:flex;flex-direction:column;animation:epIn .45s cubic-bezier(.2,.7,.2,1)}
+.ep .vis{position:relative;height:250px;overflow:hidden;background:var(--wine);display:flex;align-items:center;justify-content:center}
+.ep .vis img.cover{height:206px;width:auto;box-shadow:0 18px 34px rgba(0,0,0,.45);transform:rotate(-3deg)}
+.ep .vis img.photo{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.ep .tag{position:absolute;top:14px;left:14px;padding:3px 11px;background:var(--rose);color:#fff;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.ep .bd{padding:24px 26px 8px}
+.ep .k{margin:0;font-family:var(--latin);letter-spacing:.3em;font-size:13px;color:var(--gold)}
+.ep h3{margin:6px 0 0;font-family:var(--serif);font-size:23px;line-height:1.4;color:var(--ink);letter-spacing:-.02em}
+.ep p.t{margin:10px 0 0;font-size:15px;line-height:1.7;color:var(--text)}
+.ep p.s{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.ep .go{display:block;margin:18px 26px 4px;padding:13px;text-align:center;background:var(--wine2);color:#fff;font-weight:700;font-size:15.5px;text-decoration:none}
+.ep .bar{display:flex;justify-content:space-between;padding:10px 26px 16px}
+.ep .bar button{border:0;background:none;font:inherit;font-size:14px;color:var(--muted);cursor:pointer;padding:4px 0}
+.ep .bar button.x{color:var(--ink);font-weight:700}
+@keyframes epIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (max-width:760px){.ep-wrap{gap:0}.ep{width:min(360px,90vw)}.ep+.ep{display:none}.ep .vis{height:210px}.ep .vis img.cover{height:172px}}
+
 /* 선생님 */
 .team{padding:140px 0 120px;background:var(--paper)}
 .tgrid{margin-top:60px;display:grid;grid-template-columns:1.25fr repeat(2,1fr);gap:20px}
@@ -400,7 +444,7 @@ footer .bar{margin-top:56px;height:12px}
 
 <header class="hd">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="소포스에듀 처음으로">
+    <a class="brand" href="#top" aria-label="소포스에듀 처음으로" title="소포스에듀 Sophos Edu — 처음으로">
       <img src="img/icon.png" alt="">
       <span><span class="en">Sophos Edu</span><span class="ko">소포스에듀</span></span>
     </a>
@@ -415,9 +459,9 @@ footer .bar{margin-top:56px;height:12px}
       <a href="brief.html">입시 노트</a>
     </nav>
     <div class="act">
-      <a class="tel" href="tel:01032128123"><b>학원 대표번호 010-3212-8123</b><span>유선 02-794-8123</span></a>
-      <a class="btn btn-kakao" href="https://pf.kakao.com/_xadGxnxb/chat" target="_blank" rel="noopener" aria-label="카카오톡 상담"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#191919" d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.4 0 .9.1 1.3.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg><span class="t">카톡 상담</span></a>
-      <a class="btn btn-wine" href="https://juniorsolomon.com/consult.html" target="_blank" rel="noopener">상담 예약</a>
+      <a class="tel" href="tel:01032128123" title="전화 상담 010-3212-8123"><b>학원 대표번호 010-3212-8123</b><span>유선 02-794-8123</span></a>
+      <a class="btn btn-kakao" href="https://pf.kakao.com/_xadGxnxb/chat" target="_blank" rel="noopener" aria-label="카카오톡 상담" title="카카오톡으로 상담하기"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#191919" d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.7c-.1.3.3.6.6.4l4.4-2.9c.4 0 .9.1 1.3.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg><span class="t">카톡 상담</span></a>
+      <a class="btn btn-wine" href="https://juniorsolomon.com/consult.html" target="_blank" rel="noopener" title="상담 예약 신청서 열기">상담 예약</a>
       <details class="menu">
         <summary aria-label="전체 메뉴"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#271B1D" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
         <div class="panel">
@@ -506,8 +550,8 @@ footer .bar{margin-top:56px;height:12px}
     <article class="letter rv" aria-label="소포스에듀 대표 인사말">
       <p>수십, 수백 명을 앞에 두고 한 명의 강사가 강의하는 수업은 십 년 전에도, 이십 년 전에도 해 오던 방식입니다. 시대는 달라졌지만, 학생을 시스템에 맞추는 일대 다수의 수업은 그대로입니다. 그 안에서 몇몇의 빛나는 성공담 뒤로, 많은 아이의 조용한 실패가 묻혀 왔습니다.</p>
       <p class="big">소포스에듀는 아이를 시스템에 맞추지 않습니다.</p>
-      <p>지금의 교육 환경에서 지금 이 학생에게 무엇이 가장 필요한지를 먼저 묻고, 그 답에 맞춰 수업을 차립니다. 모두에게 같은 상을 차리는 대신, 소그룹 한 사람 한 사람에게 맞는 식단을 짜서 정찬을 내겠습니다.</p>
-      <p>소란한 잔치에는 먹을 것이 많지 않았습니다. 조용하지만 분명한 교육의 새 물결을 만들어 가겠습니다. 그동안 함께 길러 온 우리 아이들이 걸어갈 낯선 길마다, 곁에 서서 끝까지 함께 가겠습니다.</p>
+      <p>지금의 교육 환경에서 지금 이 학생에게 무엇이 가장 필요한지를 먼저 묻고, 그 답에 맞춰 수업을 차립니다. 모두에게 같은 수업을 하는 대신, 한 사람 한 사람에게 맞는 계획을 세워 끝까지 관리하겠습니다.</p>
+      <p>요란한 수업에는 남는 것이 많지 않았습니다. 조용하지만 분명한 교육의 새 물결을 만들어 가겠습니다. 그동안 함께 길러 온 우리 아이들이 걸어갈 낯선 길마다, 곁에 서서 끝까지 함께 가겠습니다.</p>
       <div class="sign"><span>소포스에듀 대표</span><b>장화연</b></div>
     </article>
   </div>
@@ -567,6 +611,11 @@ footer .bar{margin-top:56px;height:12px}
         <div class="book"><span class="v">LIBRARY</span><b>서재 카드</b><i>다 읽은 책은 내 서재에 꽂힙니다</i></div>
       </div>
     </div>
+    <a class="mlib rv" href="member.html" data-ev="library">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.3"/></svg></span>
+      <span class="tx"><em>MEMBERS' LIBRARY</em><b>고원재 교재, 실제 쪽을 열어 봅니다</b><span>10권 「살구꽃이 피면 한 번 모이고」 · 16권 「외투」 — 회원께만 각 4쪽을 공개합니다.</span></span>
+      <span class="go">회원 서재 열기 →</span>
+    </a>
   </div>
 </section>
 
@@ -879,6 +928,55 @@ footer .bar{margin-top:56px;height:12px}
   [].forEach.call(document.querySelectorAll('[data-lb]'),function(b){b.onclick=function(){lb.querySelector('img').src=b.getAttribute('data-lb');lb.classList.add('on')}});
   lb.onclick=function(e){if(e.target!==lb.querySelector('img'))lb.classList.remove('on')};
   document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('on')});
+})();
+</script>
+
+<script>
+(function(){
+  // 이벤트 팝업 — until(마지막 날)이 지나면 자동으로 뜨지 않음. 카탈로그가 소진되면 soldout:true 로 바꾸면 내려감
+  var EV=[
+    {id:'pen', until:'2027-02-28', soldout:false, tag:'EVENT', img:'img/ep_gift.jpg', kind:'photo',
+     k:'SOPHOS GIFT', h:'소포스의 문장을 선물합니다', t:'얼리 등록 · 신규 등록 상담 고객께 응원 문장 3색 볼펜과 명언 L파일을 한 세트로 드립니다.', s:'2027년 2월 28일(일)까지', href:'https://juniorsolomon.com/consult.html', go:'상담 신청하기'},
+    {id:'guide', until:'2027-02-28', soldout:false, tag:'선착순 10부', img:'img/vol1.jpg', kind:'cover',
+     k:'SOPHOS TABLE VOL.1', h:'입시 컨설팅을 신청하시면<br>학부모 가이드북을 드립니다', t:'고입 · 대입 학부모 질문 TOP 10, 2028 수능 국어 · 수학 변화를 담은 SOPHOS TABLE Vol.1 가이드북입니다.', s:'10부가 모두 나가면 마감합니다', href:'#chef', go:'입시 컨설팅 보기'}
+  ];
+  var today=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
+  function hid(id){try{return localStorage.getItem('sp_ep_'+id)===today}catch(e){return false}}
+  var list=EV.filter(function(e){return today<=e.until&&!e.soldout&&!hid(e.id)});
+  if(!list.length)return;
+  function build(){
+    var w=document.createElement('div');w.className='ep-wrap';w.setAttribute('role','dialog');w.setAttribute('aria-label','소포스에듀 소식');
+    list.forEach(function(e){
+      var c=document.createElement('div');c.className='ep';
+      c.innerHTML='<div class="vis"><span class="tag">'+e.tag+'</span><img class="'+e.kind+'" src="'+e.img+'" alt=""></div>'+
+        '<div class="bd"><p class="k">'+e.k+'</p><h3>'+e.h+'</h3><p class="t">'+e.t+'</p><p class="s">'+e.s+'</p></div>'+
+        '<a class="go" href="'+e.href+'"'+(e.href.charAt(0)==='#'?'':' target="_blank" rel="noopener"')+'>'+e.go+'</a>'+
+        '<div class="bar"><button type="button" class="today">오늘 하루 보지 않기</button><button type="button" class="x">닫기 ✕</button></div>';
+      function close(){c.remove();if(!w.querySelector('.ep'))w.remove()}
+      c.querySelector('.today').onclick=function(){try{localStorage.setItem('sp_ep_'+e.id,today)}catch(_){}close()};
+      c.querySelector('.x').onclick=close;
+      c.querySelector('.go').addEventListener('click',function(){if(e.href.charAt(0)==='#')w.remove()});
+      w.appendChild(c);
+    });
+    w.addEventListener('click',function(ev){if(ev.target===w)w.remove()});
+    document.addEventListener('keydown',function k(ev){if(ev.key==='Escape'){w.remove();document.removeEventListener('keydown',k)}});
+    document.body.appendChild(w);
+  }
+  if(document.readyState==='complete')setTimeout(build,500);else window.addEventListener('load',function(){setTimeout(build,500)});
+})();
+</script>
+
+<script>
+(function(){
+  // 방문·클릭 기록 — 이름·연락처와 연결되지 않는 무작위 번호만 사용
+  var U='https://gyuuimwalbxsocnamtqk.supabase.co/rest/v1/rpc/sp_log',K='sb_publishable_Kj2bX4fe9CRSkhvGzBbaJw_y1ZqkjOz';
+  if(location.protocol==='file:'||!/sophosedu\.co\.kr|juniorsolomon\.com/.test(location.hostname))return;
+  var a;try{a=localStorage.getItem('sp_anon');if(!a){a=crypto.getRandomValues(new Uint32Array(4)).join('-');localStorage.setItem('sp_anon',a)}}catch(e){a=null}
+  function log(k,t){try{fetch(U,{method:'POST',keepalive:true,headers:{'apikey':K,'Authorization':'Bearer '+K,'Content-Type':'application/json'},body:JSON.stringify({p_anon:a,p_kind:k,p_target:t||null,p_page:location.pathname})})}catch(e){}}
+  try{if(!sessionStorage.getItem('sp_v')){sessionStorage.setItem('sp_v','1');log('visit',document.referrer?new URL(document.referrer).hostname:'direct')}}catch(e){}
+  document.addEventListener('click',function(e){var el=e.target.closest('a,button');if(!el)return;var h=el.getAttribute('href')||'';
+    var k=/consult\.html/.test(h)?'consult':/pf\.kakao/.test(h)?'kakao':/^tel:/.test(h)?'call':/brief\.html/.test(h)?'brief_open':el.dataset.ev?'click':(h.charAt(0)==='#'&&h.length>1)?'click':null;
+    if(k)log(k,(el.dataset.ev||h).slice(0,100))},true);
 })();
 </script>
 </body>

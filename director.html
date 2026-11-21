@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>원장실 | 소포스에듀</title>
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://gyuuimwalbxsocnamtqk.supabase.co wss://gyuuimwalbxsocnamtqk.supabase.co; frame-ancestors 'none'; base-uri 'self'">
+<meta name="theme-color" content="#3E111B">
+<link rel="icon" href="img/favicon.ico" sizes="any">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#3E111B;--wine2:#5C1A28;--rose:#B8404D;--gold:#A9824A;--gold-l:#D9BE8A;--gold-p:#F1E3C3;--ink:#271B1D;--text:#3B2E31;--muted:#76666A;--line:#E4D7C4;--paper:#FBF7F0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.6;word-break:keep-all}
+.hd{background:var(--wine);color:var(--gold-p)}
+.hd .w{max-width:1180px;margin:0 auto;padding:22px 24px;display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.hd .k{margin:0;font-family:'Cormorant Garamond',serif;letter-spacing:.34em;font-size:13px;color:var(--gold-l)}
+.hd h1{margin:4px 0 0;font-family:'Noto Serif KR',serif;font-size:26px;color:#fff;letter-spacing:-.01em}
+.seg{display:flex;border:1px solid rgba(241,227,195,.35)}
+.seg button{background:none;border:0;color:var(--gold-p);font:inherit;font-size:14px;padding:8px 16px;cursor:pointer}
+.seg button.on{background:var(--gold-p);color:var(--wine);font-weight:700}
+main{max-width:1180px;margin:0 auto;padding:30px 24px 70px}
+h2{margin:0 0 14px;font-family:'Noto Serif KR',serif;font-size:18px;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline}
+h2 small{font-family:'Noto Sans KR',sans-serif;font-weight:400;font-size:13px;color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--line);padding:24px 26px;margin-bottom:22px}
+.funnel{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.st{padding:20px 18px;border-right:1px solid var(--line);position:relative}
+.st:last-child{border-right:0}
+.st p{margin:0;font-size:13px;color:var(--muted);letter-spacing:.02em}
+.st b{display:block;margin-top:6px;font-family:'Cormorant Garamond',serif;font-size:44px;line-height:1;color:var(--ink);font-weight:600}
+.st i{display:block;margin-top:8px;font-style:normal;font-size:12.5px;color:var(--gold)}
+.st .bar{position:absolute;left:0;bottom:0;height:3px;background:var(--wine2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.dist{list-style:none;margin:0;padding:0}
+.dist li{display:grid;grid-template-columns:96px 1fr 38px;gap:12px;align-items:center;padding:6px 0;font-size:14px}
+.dist .tr{height:8px;background:#F3EADB}
+.dist .fl{height:8px;background:var(--wine2)}
+.dist em{font-style:normal;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:12.5px;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--ink)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:1px 8px;margin:1px 3px 1px 0;border:1px solid var(--line);font-size:12px;color:var(--text)}
+.hot{color:var(--rose);font-weight:700}
+.empty{padding:18px 0;color:var(--muted);font-size:14px}
+.deny{max-width:520px;margin:90px auto;text-align:center;font-family:'Noto Serif KR',serif;color:var(--ink)}
+.note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+@media (max-width:860px){.funnel{grid-template-columns:repeat(2,1fr)}.st{border-bottom:1px solid var(--line)}.grid{grid-template-columns:1fr}.tw{overflow-x:auto}}
+</style>
+</head>
+<body>
+<header class="hd"><div class="w">
+  <div><p class="k">DIRECTOR'S ROOM</p><h1>원장실 · 소포스에듀</h1></div>
+  <div class="seg" id="seg"><button data-d="7">7일</button><button data-d="30" class="on">30일</button><button data-d="90">90일</button><button data-d="365">1년</button></div>
+</div></header>
+<main id="m"><p class="empty">불러오는 중…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  'use strict';
+  var sb=window.supabase.createClient('https://gyuuimwalbxsocnamtqk.supabase.co','sb_publishable_Kj2bX4fe9CRSkhvGzBbaJw_y1ZqkjOz');
+  var M=document.getElementById('m'), days=30;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function pct(a,b){return b?Math.round(a/b*100)+'%':'—'}
+  function when(t){var d=new Date(t);return (d.getMonth()+1)+'.'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+  var KIND={click:'버튼',consult:'상담 예약',kakao:'카톡 상담',call:'전화',signup_start:'가입 시작',profile_done:'가입 완료',library_open:'서재 입장',sample_view:'교재 열람',brief_open:'입시 노트'};
+  function dist(obj,total){var k=Object.keys(obj||{}).sort(function(a,b){return obj[b]-obj[a]});if(!k.length)return '<p class="empty">아직 없습니다.</p>';
+    var mx=Math.max.apply(null,k.map(function(x){return obj[x]}));
+    return '<ul class="dist">'+k.map(function(x){return '<li><span>'+esc(x)+'</span><div class="tr"><div class="fl" style="width:'+(obj[x]/mx*100)+'%"></div></div><em>'+obj[x]+'</em></li>'}).join('')+'</ul>'}
+  function render(r){
+    var f=[['방문',r.visitors,'고유 방문자'],['가입 시작',r.signups,pct(r.signups,r.visitors)+' 전환'],['가입 완료',r.profiles,pct(r.profiles,r.signups)+' 완료'],['교재 열람',r.samples,pct(r.samples,r.profiles)+' 열람'],['상담 행동',r.consults,'예약·카톡·전화']];
+    var mx=Math.max(1,r.visitors||0);
+    var h='<section class="panel"><h2>깔때기 <small>최근 '+days+'일 · 전체 회원 '+(r.members_total||0)+'명</small></h2><div class="funnel">'+
+      f.map(function(s){return '<div class="st"><p>'+s[0]+'</p><b>'+(s[1]||0)+'</b><i>'+s[2]+'</i><span class="bar" style="width:'+Math.min(100,(s[1]||0)/mx*100)+'%"></span></div>'}).join('')+'</div>'+
+      '<p class="note">방문은 무작위 방문 번호 기준입니다(같은 사람의 다른 기기는 따로 셉니다). 상담 행동은 홈페이지·서재의 상담 버튼을 누른 수입니다.</p></section>';
+    h+='<div class="grid"><section class="panel"><h2>연령대</h2>'+dist(r.by_age)+'</section><section class="panel"><h2>사는 곳</h2>'+dist(r.by_gu)+'</section>'+
+       '<section class="panel"><h2>구분</h2>'+dist(r.by_role)+'</section><section class="panel"><h2>관심 과정</h2>'+dist(r.by_interest)+'</section></div>';
+    var hot=r.hot||[];
+    h+='<section class="panel"><h2>관심 회원 <small>상담 행동 · 교재 열람 순</small></h2>'+(hot.length?'<div class="tw"><table><tr><th>이름</th><th>구분 · 연령</th><th>사는 곳</th><th>학년</th><th>관심</th><th class="n">열람</th><th class="n">상담</th><th>마지막</th><th>소식</th></tr>'+
+      hot.map(function(x){return '<tr><td><b>'+esc(x.nickname)+'</b></td><td>'+esc(x.role)+' · '+esc(x.age_band)+'</td><td>'+esc(x.gu)+(x.dong?' '+esc(x.dong):'')+'</td><td>'+esc(x.grade||'')+'</td><td>'+(x.interests||[]).map(function(i){return '<span class="tag">'+esc(i)+'</span>'}).join('')+'</td><td class="n">'+x.samples+'</td><td class="n'+(x.consults?' hot':'')+'">'+x.consults+'</td><td>'+when(x.last_at)+'</td><td>'+(x.marketing?'동의':'—')+'</td></tr>'}).join('')+'</table></div>':'<p class="empty">아직 없습니다.</p>')+'</section>';
+    var top=r.top_pages||[];
+    h+='<div class="grid"><section class="panel"><h2>많이 누른 곳</h2>'+(top.length?'<table>'+top.map(function(x){return '<tr><td>'+esc(x.target)+'</td><td class="n">'+x.n+'</td></tr>'}).join('')+'</table>':'<p class="empty">아직 없습니다.</p>')+'</section>';
+    var rc=r.recent||[];
+    h+='<section class="panel"><h2>최근 움직임</h2>'+(rc.length?'<table>'+rc.slice(0,25).map(function(x){return '<tr><td style="white-space:nowrap;color:var(--muted)">'+when(x.at)+'</td><td>'+(KIND[x.kind]||esc(x.kind))+(x.target?' · '+esc(x.target):'')+'</td><td>'+(x.nickname?esc(x.nickname)+' <span style="color:var(--muted)">'+esc(x.age_band||'')+' '+esc(x.gu||'')+'</span>':'<span style="color:var(--muted)">비회원</span>')+'</td></tr>'}).join('')+'</table>':'<p class="empty">아직 없습니다.</p>')+'</section></div>';
+    M.innerHTML=h;
+  }
+  function load(){sb.rpc('sp_funnel',{p_days:days}).then(function(r){if(r.error){M.innerHTML='<p class="deny">불러오지 못했습니다. '+esc(r.error.message)+'</p>';return}render(r.data)})}
+  document.getElementById('seg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;days=+b.dataset.d;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});load()});
+  sb.auth.getSession().then(function(s){
+    if(!s.data.session){location.replace('member.html');return}
+    sb.rpc('is_admin').then(function(a){if(a.data!==true){M.innerHTML='<p class="deny">원장 계정으로만 열 수 있습니다.</p>';return}load()});
+  });
+})();
+</script>
+</body>
+</html>
