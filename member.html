@@ -57,6 +57,8 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 .chips label{position:relative}
 .chips input{position:absolute;opacity:0;pointer-events:none}
 .chips span{display:inline-block;padding:9px 15px;border:1px solid var(--line);background:#FFFDF9;font-size:14.5px;cursor:pointer;transition:all .25s}
+.chips span small{font-size:12.5px;color:var(--muted);margin-left:2px}
+.chips input:checked+span small{color:rgba(255,255,255,.8)}
 .chips input:checked+span{background:var(--wine2);border-color:var(--wine2);color:#fff}
 .chips input:focus-visible+span{outline:2px solid var(--gold)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -150,10 +152,10 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
         <select id="grade"><option value="">선택</option><option>초등 5~6학년</option><option>중1</option><option>중2</option><option>중3</option><option>고1</option><option>고2</option><option>고3</option><option>졸업생 · 성인</option></select>
         <input type="text" id="school" maxlength="20" placeholder="학교 (선택)"></div></div>
       <div class="row"><span class="lb">관심 과정</span><div class="chips">
-        <label><input type="checkbox" name="int" value="고원재"><span>고원재</span></label>
-        <label><input type="checkbox" name="int" value="소포스 프라이빗"><span>소포스 프라이빗</span></label>
-        <label><input type="checkbox" name="int" value="소포스 스테디"><span>소포스 스테디(내신)</span></label>
-        <label><input type="checkbox" name="int" value="입시 컨설팅"><span>입시 컨설팅</span></label></div></div>
+        <label><input type="checkbox" name="int" value="고원재"><span>고원재 <small>(고전 읽기 · 서·논술형)</small></span></label>
+        <label><input type="checkbox" name="int" value="소포스 프라이빗"><span>소포스 프라이빗 <small>(수능 국어 · 수학)</small></span></label>
+        <label><input type="checkbox" name="int" value="소포스 스테디"><span>소포스 스테디 <small>(학교 내신)</small></span></label>
+        <label><input type="checkbox" name="int" value="입시 컨설팅"><span>입시 컨설팅 <small>(고입 · 대입 1:1 상담)</small></span></label></div></div>
 
       <div class="consent">
         <b style="font-family:var(--serif);color:var(--ink)">개인정보 수집 · 이용 동의 (필수)</b>
@@ -206,7 +208,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   var anon=(function(){try{var a=localStorage.getItem('sp_anon');if(!a){a=crypto.getRandomValues(new Uint32Array(4)).join('-');localStorage.setItem('sp_anon',a)}return a}catch(e){return null}})();
   function log(kind,target){sb.rpc('sp_log',{p_anon:anon,p_kind:kind,p_target:target||null,p_page:'member'}).then(function(){})}
   function show(v){['v-load','v-gate','v-profile','v-lib'].forEach(function(x){$(x).classList.toggle('hide',x!==v)})}
-  var me=null, prof=null, key=null;
+  var me=null, prof=null, key=null, isAdm=false;
 
   $('b-kakao').onclick=function(){log('signup_start');sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/member.html'}})};
   $('b-out').onclick=function(){sb.auth.signOut().then(function(){location.replace('member.html')})};
@@ -240,7 +242,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   function library(){
     show('v-load');
     sb.rpc('sp_lib_key').then(function(r){
-      if(r.error||!r.data){show('v-profile');return}
+      if(r.error||!r.data){if(isAdm){alert('원장 계정 서재 열쇠가 아직 연결되지 않았습니다. 보완 SQL을 실행해 주십시오.');show('v-lib');$('adm').style.display='flex';return}show('v-profile');return}
       return crypto.subtle.importKey('raw',b64(r.data),{name:'AES-GCM'},false,['decrypt']).then(function(k){key=k;return dec('index.bin')}).then(function(d){
         var list=JSON.parse(new TextDecoder().decode(d)), byVol={};
         list.forEach(function(x){(byVol[x.vol]=byVol[x.vol]||{vol:x.vol,title:x.title,author:x.author,pages:[]}).pages.push(x)});
@@ -249,7 +251,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
           o.pages.map(function(p,i){return '<li><button type="button" data-f="'+esc(p.f)+'" data-t="'+esc(o.vol+'권 · '+p.page)+'"><span>'+esc(p.page)+'</span><em>VIEW</em></button></li>'}).join('')+'</ol></article>'}).join('');
         $('who').textContent=(prof&&prof.nickname?prof.nickname+' 님':'회원')+' · 회원 서재';
         show('v-lib');
-        sb.rpc('is_admin').then(function(a){if(a.data===true)$('adm').style.display='flex'});
+        if(isAdm){$('adm').style.display='flex';$('vols').parentNode.insertBefore($('adm'),$('vols'))}
       });
     }).catch(function(){alert('서재를 여는 중 문제가 생겼습니다. 새로고침해 주십시오.');show('v-gate')});
   }
@@ -277,7 +279,13 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
       me=s.data.session&&s.data.session.user;
       if(!me){show('v-gate');return}
       sb.from('sp_profiles').select('nickname,role').eq('id',me.id).maybeSingle().then(function(r){
-        prof=r.data; if(!prof){show('v-profile');return} library();
+        prof=r.data;
+        sb.rpc('is_admin').then(function(a){
+          isAdm=a.data===true;
+          if(!prof&&!isAdm){show('v-profile');return}
+          if(!prof)prof={nickname:'원장'};
+          library();
+        });
       });
     });
   }
