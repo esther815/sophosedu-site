@@ -63,6 +63,8 @@ td.n{text-align:right;font-variant-numeric:tabular-nums}
 .vprev .bar button{background:none;border:1px solid rgba(241,227,195,.4);color:#F1E3C3;font:inherit;padding:6px 14px;cursor:pointer}
 .vprev iframe,.vprev img{flex:1;margin:0 16px 16px;background:#fff;border:0;object-fit:contain;max-height:calc(100vh - 70px)}
 @media (max-width:600px){.vi{grid-template-columns:1fr auto}.vi .pv{display:none}}
+.vg p.g.int{color:#B8202E}
+.vg p.g.ext{color:#2E5E4E}
 </style>
 </head>
 <body>
@@ -115,7 +117,7 @@ td.n{text-align:right;font-variant-numeric:tabular-nums}
         vlist=JSON.parse(new TextDecoder().decode(d)); var groups={};
         vlist.forEach(function(x,i){(groups[x.group]=groups[x.group]||[]).push([x,i])});
         return '<section class="vault"><h2>내 서류함 <small>바로 건네는 자료 · 원장 전용</small></h2><div class="vg">'+Object.keys(groups).map(function(g){
-          return '<p class="g">'+esc(g)+'</p>'+groups[g].map(function(p){var x=p[0];return '<div class="vi"><div><b>'+esc(x.title)+'</b><span>'+esc(x.note)+' · '+kb(x.size)+'</span></div><button type="button" class="pv" data-v="'+p[1]+'">보기</button><button type="button" class="dl" data-d="'+p[1]+'">내려받기</button></div>'}).join('')}).join('')+'</div></section>';
+          return '<p class="g'+(g.indexOf('내부')>=0?' int':g.indexOf('외부')>=0?' ext':'')+'">'+esc(g)+'</p>'+groups[g].map(function(p){var x=p[0];return '<div class="vi"><div><b>'+esc(x.title)+'</b><span>'+esc(x.note)+' · '+kb(x.size)+'</span></div><button type="button" class="pv" data-v="'+p[1]+'">보기</button><button type="button" class="dl" data-d="'+p[1]+'">내려받기</button></div>'}).join('')}).join('')+'</div></section>';
       });
     }).catch(function(){return '<section class="vault"><h2>내 서류함</h2><p class="empty">서류함을 열지 못했습니다.</p></section>'});
   }
