@@ -4,6 +4,7 @@ Allow: /
 Disallow: /member.html
 Disallow: /director.html
 Disallow: /lib/
+Disallow: /vault/
 
 # AI 학습용 수집 거부 (홈페이지 저작권 문구와 일치)
 User-agent: GPTBot
