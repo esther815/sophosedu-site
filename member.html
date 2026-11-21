@@ -80,6 +80,14 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 .vol li button{display:flex;width:100%;justify-content:space-between;align-items:center;padding:12px 26px;background:none;border:0;font:inherit;font-size:15.5px;color:var(--text);cursor:pointer;text-align:left}
 .vol li button:hover{background:#FBF5EA;color:var(--ink)}
 .vol li button em{font-style:normal;font-family:var(--latin);letter-spacing:.2em;font-size:12.5px;color:var(--gold)}
+.notes{display:grid;gap:14px;margin-top:30px}
+.notes:empty{display:none}
+.nt{display:grid;grid-template-columns:1fr auto;gap:2px 18px;align-items:center;text-align:left;width:100%;padding:20px 24px;background:#fff;border:1px solid var(--gold);border-left:4px solid var(--wine2);font:inherit;cursor:pointer}
+.nt:hover{background:#FBF5EA}
+.nt .k{grid-column:1}
+.nt b{grid-column:1;font-family:var(--serif);font-size:19px;color:var(--ink)}
+.nt>span:not(.k){grid-column:1;font-size:14px;color:var(--muted)}
+.nt em{grid-column:2;grid-row:1/4;font-style:normal;font-weight:700;color:var(--wine2);white-space:nowrap}
 .viewer{position:fixed;inset:0;z-index:50;background:rgba(24,8,12,.9);display:none;flex-direction:column}
 .viewer.on{display:flex}
 .viewer .bar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;color:#F1E3C3;font-size:14.5px}
@@ -177,9 +185,10 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   <!-- 3. 서재 -->
   <section id="v-lib" class="hide">
     <div class="lib-hd">
-      <div><p class="k">GOWONJAE · SAMPLE PAGES</p><h1>고원재 교재 맛보기</h1>
-      <p class="lead">실제 교재의 쪽을 그대로 옮겼습니다. 회원 열람용이며 내려받기와 인쇄는 할 수 없습니다.</p></div>
+      <div><p class="k">MEMBERS' LIBRARY</p><h1>회원 서재</h1>
+      <p class="lead">회원 안내와 고원재 교재 맛보기를 모았습니다. 회원 열람용이며 내려받기와 인쇄는 할 수 없습니다.</p></div>
     </div>
+    <div class="notes" id="notes"></div>
     <div class="vols" id="vols"></div>
     <div class="adm" id="adm"><div><b>원장실</b><br><span style="font-size:14px">방문 · 가입 · 열람 · 상담 흐름과 관심 회원을 확인합니다.</span></div><a href="director.html">원장실 열기</a></div>
     <div class="me"><span id="who"></span><div class="acts">
@@ -245,6 +254,9 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
       if(r.error||!r.data){if(isAdm){alert('원장 계정 서재 열쇠가 아직 연결되지 않았습니다. 보완 SQL을 실행해 주십시오.');show('v-lib');$('adm').style.display='flex';return}show('v-profile');return}
       return crypto.subtle.importKey('raw',b64(r.data),{name:'AES-GCM'},false,['decrypt']).then(function(k){key=k;return dec('index.bin')}).then(function(d){
         var list=JSON.parse(new TextDecoder().decode(d)), byVol={};
+        var notes=list.filter(function(x){return x.kind==='notice'});
+        $('notes').innerHTML=notes.map(function(n){return '<button type="button" class="nt" data-f="'+esc(n.f)+'" data-t="'+esc(n.title)+'"><span class="k" style="font-size:11.5px">MEMBERS NOTICE</span><b>'+esc(n.title)+'</b><span>'+esc(n.sub||'')+'</span><em>보기 →</em></button>'}).join('');
+        list=list.filter(function(x){return x.kind!=='notice'});
         list.forEach(function(x){(byVol[x.vol]=byVol[x.vol]||{vol:x.vol,title:x.title,author:x.author,pages:[]}).pages.push(x)});
         $('vols').innerHTML=Object.keys(byVol).sort(function(a,b){return a-b}).map(function(v){var o=byVol[v];
           return '<article class="vol"><div class="top"><span class="no">'+esc(o.vol)+'</span><div><p class="k" style="font-size:11.5px">고전은 원래 재미있다</p><h3>「'+esc(o.title)+'」</h3><p class="au">'+esc(o.author)+'</p></div></div><ol>'+
@@ -256,6 +268,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
     }).catch(function(){alert('서재를 여는 중 문제가 생겼습니다. 새로고침해 주십시오.');show('v-gate')});
   }
 
+  $('notes').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;open(b.getAttribute('data-f'),b.getAttribute('data-t'))});
   $('vols').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;open(b.getAttribute('data-f'),b.getAttribute('data-t'))});
   function open(f,t){
     $('vw-t').textContent=t+' · 불러오는 중'; $('vw').classList.add('on');
