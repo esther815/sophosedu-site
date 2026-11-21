@@ -1,0 +1,33 @@
+# 소포스에듀 — 검색·AI 검색에는 노출, 생성형 AI 학습용 수집은 거부
+User-agent: *
+Allow: /
+
+# AI 학습용 수집 거부 (홈페이지 저작권 문구와 일치)
+User-agent: GPTBot
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: Google-Extended
+Disallow: /
+User-agent: Applebot-Extended
+Disallow: /
+User-agent: CCBot
+Disallow: /
+
+# AI 검색·답변용 방문은 허용 (추천·인용에 필요)
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Yeti
+Allow: /
+
+Sitemap: https://sophosedu.co.kr/sitemap.xml
+
+Disallow: /member.html
