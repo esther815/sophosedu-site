@@ -295,6 +295,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
         prof=r.data;
         sb.rpc('is_admin').then(function(a){
           isAdm=a.data===true;
+          if(isAdm){var nx=null;try{nx=sessionStorage.getItem('sp_next');sessionStorage.removeItem('sp_next')}catch(_){}if(nx==='director'){location.replace('director.html');return}}
           if(!prof&&!isAdm){show('v-profile');return}
           if(!prof)prof={nickname:'원장'};
           library();
