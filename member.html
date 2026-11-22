@@ -441,6 +441,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
         prof=r.data;
         sb.rpc('is_admin').then(function(a){
           isAdm=a.data===true;
+          try{if(isAdm)localStorage.setItem('sp_adm','1');else localStorage.removeItem('sp_adm')}catch(_){}
           if(isAdm&&ROOMNAME[AS]){banner();
             document.querySelectorAll('#t-out,#b-out,#b-del').forEach(function(x){x.style.display='none'});
             if(AS==='teacher')return teacherRoom({name:'(미리보기)',subject:''});
