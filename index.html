@@ -202,6 +202,37 @@ section[id]{scroll-margin-top:84px}
 .twocol{margin-top:64px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:start}
 @media (max-width:900px){.cs{padding:100px 0 90px}.twocol{grid-template-columns:1fr;gap:40px}.cs-head{grid-template-columns:1fr}.cs-no{grid-row:auto}}
 .fig{position:relative;overflow:hidden}
+.dsb{margin:0 7px 7px 0;background:#EFE2C8;border:1px solid #CDB38A;box-shadow:0 1px 0 #fff inset,0 18px 40px rgba(62,17,27,.16),6px 6px 0 -1px #E4D3B2,6px 6px 0 0 #CDB38A;padding:14px;position:relative}
+.dsb::before{content:"";position:absolute;inset:7px;border:1px solid rgba(140,98,52,.45);pointer-events:none;z-index:3}
+.dsb-book{position:relative;perspective:1600px}
+.dsb-pg{display:none;background:#F6EDDA;transform-origin:left center;backface-visibility:hidden}
+.dsb-pg.on{display:block}
+.dsb-pg.turn-n{animation:dsbN .55s ease both}.dsb-pg.turn-p{animation:dsbP .55s ease both}
+@keyframes dsbN{0%{transform:rotateY(28deg);opacity:.25;filter:brightness(.85)}100%{transform:none;opacity:1;filter:none}}
+@keyframes dsbP{0%{transform:rotateY(-28deg);opacity:.25;filter:brightness(.85)}100%{transform:none;opacity:1;filter:none}}
+.dsb-art{position:relative;aspect-ratio:3/4;overflow:hidden;background:#EADBBE}
+.dsb-art img{width:100%;height:100%;object-fit:cover;display:block}
+.dsb-cover .dsb-art{aspect-ratio:1055/1491}
+.dsb-title{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);text-align:center;background:rgba(246,237,218,.9);border:1px solid #B79562;outline:1px solid rgba(183,149,98,.5);outline-offset:4px;padding:14px 30px 12px}
+.dsb-title b{display:block;font-family:'Noto Serif KR',serif;font-weight:700;font-size:clamp(28px,3.4vw,40px);letter-spacing:.32em;margin-right:-.32em;color:#3E111B;line-height:1.2}
+.dsb-title span{display:block;margin-top:4px;font-size:13px;letter-spacing:.5em;margin-right:-.5em;color:#8A6A3E}
+.dsb-plate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse at center,#F4E8CF 0%,#E6D3AE 78%,#CDB089 100%)}
+.dsb-mono{font-family:'Cormorant Garamond','Noto Serif KR',serif;font-weight:600;font-size:clamp(56px,7vw,86px);color:#5C3A22;letter-spacing:.08em}
+.dsb-rule{width:90px;height:1px;background:#A9824A}
+.dsb-pn{font-family:'Noto Serif KR',serif;font-size:16px;color:#7A5A36;letter-spacing:.2em}
+.dsb-txt{padding:20px 22px 22px;border-top:1px solid #D9C39C}
+.dsb-k{margin:0;font-size:12.5px;letter-spacing:.06em;color:#A9824A}
+.dsb-txt h4{margin:6px 0 0;font-family:'Noto Serif KR',serif;font-size:22px;color:#271B1D;line-height:1.4}
+.dsb-txt h4 small{display:block;font-family:'Cormorant Garamond','Noto Serif KR',serif;font-size:15px;color:#8A6A3E;font-weight:500;letter-spacing:.04em}
+.dsb-intro{margin:10px 0 0;font-size:15px;line-height:1.75;color:#3B2E31}
+.dsb-works{margin:12px 0 0;font-size:14.5px;line-height:1.7;color:#3B2E31}
+.dsb-works b{display:block;font-size:12.5px;color:#B8404D;letter-spacing:.06em;margin-bottom:2px}
+.dsb-hint{margin:12px 0 0;font-size:13.5px;color:#8A6A3E}
+.dsb-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;position:relative;z-index:4}
+.dsb-nav button{font:inherit;font-size:14.5px;min-height:44px;padding:0 18px;border:1px solid #B79562;background:#F6EDDA;color:#5C1A28;cursor:pointer}
+.dsb-nav .dsb-x{background:#5C1A28;border-color:#5C1A28;color:#F6EDDA;font-weight:700}
+.dsb-nav button:disabled{opacity:.35;cursor:default}
+.dsb-n{font-family:'Cormorant Garamond',serif;letter-spacing:.14em;color:#7A5A36;font-size:15px}
 .oldbook{position:relative;margin:0 7px 7px 0;padding:14px;background:#EFE2C8;border:1px solid #CDB38A;box-shadow:0 1px 0 #fff inset,0 18px 40px rgba(62,17,27,.16),6px 6px 0 -1px #E4D3B2,6px 6px 0 0 #CDB38A}
 .oldbook::before{content:"";position:absolute;inset:7px;border:1px solid rgba(140,98,52,.45);pointer-events:none;z-index:1}
 .oldbook img{display:block;width:100%;filter:none!important}
@@ -645,7 +676,33 @@ footer .bar{margin-top:56px;height:12px}
     <p class="lead rv" style="max-width:760px;margin:22px 0 0">요약본이 아니라 원전에 가까운 글을 끝까지 읽습니다. 한 권을 붙들고 묻고 답하는 동안 생각이 깊어지고, 그렇게 읽은 책은 학교 서·논술형 평가와 논술, 면접에서 꺼내 쓰는 고급 글감이 됩니다.</p>
     <div class="twocol">
       <figure class="fig rv" style="margin:0">
-        <div class="oldbook"><img src="img/classics_old.jpg" alt="동서양 고전 작가들을 수채화로 그린 그림" style="aspect-ratio:1055/1491"></div>
+        <div class="dsb" id="dsb" aria-roledescription="넘기는 책">
+          <div class="dsb-book"><section class="dsb-pg dsb-cover on" data-i="0" aria-label="표지 · 독서상우">
+  <div class="dsb-art"><img src="img/classics_old.jpg" alt="동서양 고전 작가들을 그린 그림"><div class="dsb-title"><b lang="zh-Hant">讀書尙友</b><span>독서상우</span></div></div>
+  <div class="dsb-txt"><p class="dsb-k">COVER · 讀書尙友</p><p class="dsb-intro">책을 읽어 옛사람을 벗으로 삼는다. 『맹자』에서 온 말입니다. 고원재는 시대를 건너온 작가들과 한 권씩 마주 앉아 묻고 답합니다.</p><p class="dsb-hint">다음 장을 넘겨 오늘의 벗을 만나 보세요 →</p></div>
+</section>
+<section class="dsb-pg" data-i="1" data-img="img/authors/shakespeare.jpg" aria-label="윌리엄 셰익스피어">
+  <div class="dsb-art"><div class="dsb-plate"><span class="dsb-mono">W·S</span><span class="dsb-rule"></span><span class="dsb-pn">윌리엄 셰익스피어</span></div></div>
+  <div class="dsb-txt"><p class="dsb-k">1564 – 1616 · 잉글랜드 · 극작가 · 시인</p><h4>윌리엄 셰익스피어 <small>William Shakespeare</small></h4><p class="dsb-intro">야망과 질투, 사랑과 복수 — 사람의 마음이 움직이는 모든 순간을 무대 위의 언어로 옮겼습니다.</p><p class="dsb-works"><b>함께 읽는 작품</b>『햄릿』 · 『맥베스』 · 『로미오와 줄리엣』 · 『베니스의 상인』 · 『한여름 밤의 꿈』</p></div>
+</section>
+<section class="dsb-pg" data-i="2" data-img="img/authors/austen.jpg" aria-label="제인 오스틴">
+  <div class="dsb-art"><div class="dsb-plate"><span class="dsb-mono">J·A</span><span class="dsb-rule"></span><span class="dsb-pn">제인 오스틴</span></div></div>
+  <div class="dsb-txt"><p class="dsb-k">1775 – 1817 · 영국 · 소설가</p><h4>제인 오스틴 <small>Jane Austen</small></h4><p class="dsb-intro">결혼과 신분을 둘러싼 판단과 편견을, 날카로우면서도 유머 있는 대화로 그려 냈습니다.</p><p class="dsb-works"><b>함께 읽는 작품</b>『오만과 편견』 · 『이성과 감성』 · 『엠마』</p></div>
+</section>
+<section class="dsb-pg" data-i="3" data-img="img/authors/hemingway.jpg" aria-label="어니스트 헤밍웨이">
+  <div class="dsb-art"><div class="dsb-plate"><span class="dsb-mono">E·H</span><span class="dsb-rule"></span><span class="dsb-pn">어니스트 헤밍웨이</span></div></div>
+  <div class="dsb-txt"><p class="dsb-k">1899 – 1961 · 미국 · 소설가 · 1954년 노벨문학상</p><h4>어니스트 헤밍웨이 <small>Ernest Hemingway</small></h4><p class="dsb-intro">짧고 단단한 문장으로, 지고도 꺾이지 않는 사람의 존엄을 그렸습니다.</p><p class="dsb-works"><b>함께 읽는 작품</b>『노인과 바다』 · 『무기여 잘 있거라』 · 『누구를 위하여 종은 울리나』</p></div>
+</section>
+<section class="dsb-pg" data-i="4" data-img="img/authors/parkjiwon.jpg" aria-label="박지원">
+  <div class="dsb-art"><div class="dsb-plate"><span class="dsb-mono">燕巖</span><span class="dsb-rule"></span><span class="dsb-pn">박지원</span></div></div>
+  <div class="dsb-txt"><p class="dsb-k">1737 – 1805 · 조선 · 실학자 · 문장가</p><h4>박지원 <small>朴趾源 · 호 연암(燕巖)</small></h4><p class="dsb-intro">청나라 열하까지의 여정을 『열하일기』에 담아, 낡은 생각을 깨는 새로운 문장을 열었습니다.</p><p class="dsb-works"><b>함께 읽는 작품</b>『열하일기』 · 「허생전」 · 「일야구도하기」 · 「양반전」</p></div>
+</section>
+<section class="dsb-pg" data-i="5" data-img="img/authors/jeongyakyong.jpg" aria-label="정약용">
+  <div class="dsb-art"><div class="dsb-plate"><span class="dsb-mono">茶山</span><span class="dsb-rule"></span><span class="dsb-pn">정약용</span></div></div>
+  <div class="dsb-txt"><p class="dsb-k">1762 – 1836 · 조선 · 실학자 · 시인</p><h4>정약용 <small>丁若鏞 · 호 다산(茶山)</small></h4><p class="dsb-intro">강진 유배 18년 동안 책과 편지를 쓰며, 백성을 위한 학문과 자기 자신을 지키는 공부를 놓지 않았습니다.</p><p class="dsb-works"><b>함께 읽는 작품</b>「수오재기」 · 「죽란시사첩서」(고원재 10권) · 『목민심서』</p></div>
+</section></div>
+          <div class="dsb-nav"><button type="button" class="dsb-p" aria-label="앞 장">‹ 앞 장</button><span class="dsb-n">표지</span><button type="button" class="dsb-x" aria-label="다음 장">다음 장 ›</button></div>
+        </div>
         <figcaption>시대를 건너온 질문, 동서양 고전을 <span class="nowrap">한 권씩 끝까지 읽습니다.</span></figcaption>
       </figure>
       <div class="rv">
@@ -1072,6 +1129,25 @@ footer .bar{margin-top:56px;height:12px}
   document.addEventListener('click',function(e){var el=e.target.closest('a,button');if(!el)return;var h=el.getAttribute('href')||'';
     var k=/consult\.html/.test(h)?'consult':/pf\.kakao/.test(h)?'kakao':/^tel:/.test(h)?'call':/brief\.html/.test(h)?'brief_open':el.dataset.ev?'click':(h.charAt(0)==='#'&&h.length>1)?'click':null;
     if(k)log(k,(el.dataset.ev||h).slice(0,100))},true);
+})();
+</script>
+<script>
+(function(){
+  var b=document.getElementById('dsb');if(!b)return;
+  var P=[].slice.call(b.querySelectorAll('.dsb-pg')),i=0,N=P.length,ac=null;
+  // 초상 이미지가 올라와 있으면 표지처럼 그림으로 바꿔 끼움
+  P.forEach(function(p){var src=p.getAttribute('data-img');if(!src)return;var im=new Image();im.onload=function(){var a=p.querySelector('.dsb-art');a.innerHTML='';im.alt=p.getAttribute('aria-label')+' 초상';a.appendChild(im)};im.src=src});
+  function swish(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();var t=ac.currentTime,len=.42,buf=ac.createBuffer(1,ac.sampleRate*len,ac.sampleRate),d=buf.getChannelData(0);
+    for(var k=0;k<d.length;k++){var x=k/d.length;d[k]=(Math.random()*2-1)*Math.pow(1-x,1.8)*(x<.08?x/.08:1)*(1+.6*Math.sin(x*38))}
+    var s=ac.createBufferSource();s.buffer=buf;var f=ac.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(2600,t);f.frequency.exponentialRampToValueAtTime(900,t+len);f.Q.value=.7;
+    var g=ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.32,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+len);s.connect(f);f.connect(g);g.connect(ac.destination);s.start(t)}catch(e){}}
+  var pb=b.querySelector('.dsb-p'),nb=b.querySelector('.dsb-x'),lab=b.querySelector('.dsb-n');
+  function go(j,dir){if(j<0||j>=N||j===i)return;P[i].classList.remove('on','turn-n','turn-p');i=j;var p=P[i];p.classList.add('on');void p.offsetWidth;p.classList.add(dir>0?'turn-n':'turn-p');swish();ui()}
+  function ui(){pb.disabled=i===0;nb.textContent=i===N-1?'처음으로 ↺':'다음 장 ›';lab.textContent=i===0?'표지':(i+' / '+(N-1))}
+  pb.onclick=function(){go(i-1,-1)};nb.onclick=function(){if(i===N-1)go(0,-1);else go(i+1,1)};
+  var x0=null;b.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  b.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>60){if(dx<0)go(i+1,1);else go(i-1,-1)}},{passive:true});
+  ui();
 })();
 </script>
 <script src="/nav.js" defer></script>
