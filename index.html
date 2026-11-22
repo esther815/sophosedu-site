@@ -1219,6 +1219,25 @@ footer .bar{margin-top:56px;height:12px}
 })();
 </script>
 <script src="/nav.js" defer></script>
+<script>
+/* 내 화면으로 들어가기 — 주니어솔로몬과 같은 아래 고정 띠 */
+(function(){
+  function on(){try{return !!localStorage.getItem('sb-gyuuimwalbxsocnamtqk-auth-token')}catch(e){return false}}
+  function bar(){
+    if(document.getElementById('spEntry'))return;
+    var b=document.createElement('div');b.id='spEntry';
+    b.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(251,247,240,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid #E7DCC8;padding:10px 14px calc(10px + env(safe-area-inset-bottom));font-family:"Noto Sans KR",sans-serif';
+    var main='flex:1 1 0;min-height:50px;border-radius:999px;border:1px solid #3E111B;background:#3E111B;color:#F1E3C3;font-weight:600;font-size:15px;font-family:inherit;display:flex;align-items:center;justify-content:center;text-decoration:none;letter-spacing:.01em;padding:0;margin:0;box-shadow:none'.split(';').map(function(x){return x?x+'!important':''}).join(';');
+    b.innerHTML=on()
+      ? '<div style="display:flex;max-width:520px;margin:0 auto"><a href="/member.html" style="'+main+'">✦ 내 화면으로 들어가기</a></div>'
+      : '<div style="text-align:center;font-size:12.5px;color:#8A6A3E;margin-bottom:8px">재원생 가족과 선생님은 여기서 들어갑니다</div><div style="display:flex;max-width:520px;margin:0 auto"><a href="/member.html" style="'+main+'">✦ 회원 서재로 들어가기</a></div>';
+    document.body.appendChild(b);
+    var h=b.offsetHeight;document.body.style.paddingBottom=(h+8)+'px';
+    var st=document.createElement('style');st.textContent='.spnav{bottom:'+(h+12)+'px!important}';document.head.appendChild(st);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bar);else bar();
+})();
+</script>
 </body>
 </html>
 

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 70" role="img" aria-label="주니어솔로몬 왕관">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E3C474"/>
+      <stop offset="0.55" stop-color="#C9A24C"/>
+      <stop offset="1" stop-color="#A9802F"/>
+    </linearGradient>
+    <mask id="m">
+      <rect width="118" height="70" fill="#fff"/>
+      <rect x="12" y="49" width="94" height="1.6" fill="#000"/>
+      <rect x="12" y="62" width="94" height="1.6" fill="#000"/>
+      <ellipse cx="28" cy="56" rx="5.2" ry="3.6" fill="#000"/>
+      <ellipse cx="59" cy="56" rx="5.2" ry="3.6" fill="#000"/>
+      <ellipse cx="90" cy="56" rx="5.2" ry="3.6" fill="#000"/>
+      <rect x="38" y="54" width="11" height="4" rx="0.8" fill="#000"/>
+      <rect x="69" y="54" width="11" height="4" rx="0.8" fill="#000"/>
+      <rect x="14" y="54" width="5" height="4" rx="0.8" fill="#000"/>
+      <rect x="99" y="54" width="5" height="4" rx="0.8" fill="#000"/>
+      <circle cx="59" cy="8" r="1.4" fill="#000"/>
+    </mask>
+  </defs>
+  <g fill="url(#g)" mask="url(#m)">
+    <circle cx="59" cy="8" r="6.6"/>
+    <path d="M7 16 L35 30 L59 15 L83 30 L111 16 L111 68 L7 68 Z" stroke-linejoin="round"/>
+  </g>
+</svg>
