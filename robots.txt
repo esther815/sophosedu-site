@@ -3,6 +3,7 @@ User-agent: *
 Allow: /
 Disallow: /member.html
 Disallow: /director.html
+Disallow: /find.html
 Disallow: /lib/
 Disallow: /vault/
 Disallow: /tools/
