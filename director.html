@@ -277,6 +277,11 @@ h2{flex-wrap:wrap;gap:4px 14px}
   });
 })();
 </script>
+<script>
+/* 30분 동안 아무 조작이 없으면 자동 로그아웃 — 학원 공용 컴퓨터·분실 휴대폰 대비 */
+(function(){var LIM=30*60*1000,last=Date.now();['click','keydown','touchstart','scroll'].forEach(function(e){document.addEventListener(e,function(){last=Date.now()},{passive:true})});
+setInterval(function(){if(Date.now()-last>LIM&&window.supabase){try{var c=window.supabase.createClient('https://gyuuimwalbxsocnamtqk.supabase.co','sb_publishable_Kj2bX4fe9CRSkhvGzBbaJw_y1ZqkjOz');c.auth.signOut().finally(function(){try{localStorage.removeItem('sp_adm')}catch(_){}location.replace('/')})}catch(e){location.replace('/')}}},60000)})();
+</script>
 <script src="/js/pdfview.js"></script>
 <script src="/nav.js" defer></script>
 </body>
