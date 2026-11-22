@@ -100,6 +100,19 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .vi.iw{background:#FBF1F2;border-left:3px solid #B8202E;padding-left:12px}
 .vi.iw b{color:#B8202E}
 .vi .warn{font-style:normal;font-weight:800;color:#B8202E;letter-spacing:.02em}
+.vbox{border:1px solid var(--line);background:#fff;padding:4px 18px 8px;margin:0 0 18px}
+.vbox .vi:last-child{border-bottom:0}
+.vbh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:0 -18px 6px;padding:12px 18px;border-bottom:1px solid var(--line);background:#FAF6EE}
+.vbh b{font-size:15px;color:var(--ink);letter-spacing:.02em}
+.vbh span{font-size:13px;color:var(--muted)}
+.vbox.ext{border:2px solid #2E7D5B}
+.vbox.ext .vbh{background:#EAF5EE;border-bottom-color:#BFDCC9}
+.vbox.ext .vbh b{color:#1F6247}
+.vbox.ext .vbh b::before{content:"✓ ";}
+.vbox.int{border:2px solid #B8202E}
+.vbox.int .vbh{background:#FBEDEF;border-bottom-color:#E9C2C7}
+.vbox.int .vbh b{color:#B8202E}
+.vbox.int .vi.iw{background:none;border-left:0;padding-left:0}
 </style>
 </head>
 <body>
@@ -161,7 +174,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
         GROUPS.forEach(function(g){groups[g]=[]});
         vlist.forEach(function(x,i){(groups[x.group]=groups[x.group]||[]).push([x,i])});
         return '<section class="vault"><h2>내 서류함 <small>바로 건네는 자료 · 원장 전용</small></h2><div class="vg">'+Object.keys(groups).filter(function(g){return groups[g].length}).map(function(g){
-          return '<p class="g'+(g.indexOf('내부')>=0?' int':g.indexOf('외부')>=0?' ext':'')+'">'+esc(g)+'</p>'+groups[g].map(function(p){var x=p[0];var iw=(x.group||'').indexOf('내부')>=0;return '<div class="vi'+(x.s?' three':'')+(iw?' iw':'')+'"><div><b>'+(iw?'<em class="warn">(주의)</em> ':'')+esc(x.title)+'</b><span>'+esc(x.note||x.name)+' · '+kb(x.size)+(x.s?' · 올린 날 '+esc(x.t||''):'')+'</span></div><button type="button" class="pv" data-vv="'+p[1]+'">보기</button><button type="button" class="dl" data-vd="'+p[1]+'">내려받기</button>'+(CAN_SHARE?'<button type="button" class="sh" data-vs="'+p[1]+'">카톡 전달</button>':'')+(x.s?'<button type="button" class="x" data-vx="'+p[1]+'" aria-label="지우기">지우기</button>':'')+'</div>'}).join('')}).join('')+'</div>'+
+          var gk=g.indexOf('내부')>=0?'int':g.indexOf('외부')>=0?'ext':'etc';var gh=gk==='ext'?'<div class="vbh"><b>외부 전달용</b><span>이 상자 안의 자료만 기관·외부에 보내도 됩니다</span></div>':gk==='int'?'<div class="vbh"><b>(주의) 내부용 · 외부 전달 금지</b><span>원장님만 보는 자료입니다. 밖으로 보내지 마세요</span></div>':'<div class="vbh"><b>'+esc(g)+'</b></div>';return '<section class="vbox '+gk+'">'+gh+groups[g].map(function(p){var x=p[0];var iw=(x.group||'').indexOf('내부')>=0;return '<div class="vi'+(x.s?' three':'')+(iw?' iw':'')+'"><div><b>'+(iw?'<em class="warn">(주의)</em> ':'')+esc(x.title)+'</b><span>'+esc(x.note||x.name)+' · '+kb(x.size)+(x.s?' · 올린 날 '+esc(x.t||''):'')+'</span></div><button type="button" class="pv" data-vv="'+p[1]+'">보기</button><button type="button" class="dl" data-vd="'+p[1]+'">내려받기</button>'+(CAN_SHARE?'<button type="button" class="sh" data-vs="'+p[1]+'">카톡 전달</button>':'')+(x.s?'<button type="button" class="x" data-vx="'+p[1]+'" aria-label="지우기">지우기</button>':'')+'</div>'}).join('')+'</section>'}).join('')+'</div>'+
           '<div class="vup"><p><b>파일 올리기</b><br><span style="font-size:13px;color:var(--muted)">사진 · PDF · 한글 · 워드 · 엑셀, <span style="white-space:nowrap">한 파일 50MB까지</span></span></p><div class="row"><label class="pick" for="vfile">파일 고르기</label><input type="file" id="vfile"><input type="text" id="vtitle" placeholder="이름 (비우면 파일 이름)"><select id="vto"><option value="vault">내 서류함 (나만)</option><option value="t">강사방</option><option value="m:all">학부모방 · 학생방 모두</option><option value="m:학부모">학부모방만</option><option value="m:학생">학생방만</option></select><select id="vgrp">'+GROUPS.map(function(g){return '<option'+(g==='기타 자료'?' selected':'')+'>'+esc(g)+'</option>'}).join('')+'</select><button type="button" id="vgo" disabled>올리기</button></div><p class="st2" id="vst">이 기기에서 잠근 뒤 올라갑니다. 내 서류함은 원장만, 강사방은 승인된 강사만, 학부모·학생방은 가입한 회원만 엽니다.</p></div></section>';
       });
     }).catch(function(){return '<section class="vault"><h2>내 서류함</h2><p class="empty">서류함을 열지 못했습니다.</p></section>'});
