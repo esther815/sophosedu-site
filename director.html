@@ -113,6 +113,18 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .vbox.int .vbh{background:#FBEDEF;border-bottom-color:#E9C2C7}
 .vbox.int .vbh b{color:#B8202E}
 .vbox.int .vi.iw{background:none;border-left:0;padding-left:0}
+.gpg{display:none;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;padding:10px 14px calc(14px + env(safe-area-inset-bottom));border-top:1px solid rgba(241,227,195,.2)}
+.gpg.on{display:flex}
+#vpb{min-height:0;overflow:hidden}
+#vpb img,#vpb iframe{width:calc(100% - 32px);height:calc(100% - 16px);max-height:none;min-height:0}
+#vpb img{background:transparent}
+.gpg button{min-height:42px;padding:0 14px;background:none;border:1px solid rgba(241,227,195,.45);color:#F1E3C3;font:inherit;font-size:14px;cursor:pointer}
+.gpg .nx{background:#F1E3C3;color:#3E111B;font-weight:700;border-color:#F1E3C3}
+.gpg .sh{background:#FEE500;color:#191919;border-color:#FEE500}
+.gpg button:disabled{opacity:.3}
+.gpg span{color:#F1E3C3;min-width:60px;text-align:center;letter-spacing:.1em}
+.vi.gal b{color:var(--ink)}
+.vi.gal .open{background:var(--wine2);border:1px solid var(--wine2);color:#fff;font:inherit;font-size:14px;padding:8px 16px;cursor:pointer;min-height:40px}
 </style>
 </head>
 <body>
@@ -120,7 +132,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   <div><p class="k">DIRECTOR'S ROOM</p><h1>원장실 · 소포스에듀</h1></div>
   <div class="seg" id="seg"><button data-d="7">7일</button><button data-d="30" class="on">30일</button><button data-d="90">90일</button><button data-d="365">1년</button></div>
 </div></header>
-<div class="vprev" id="vp"><div class="bar"><span id="vpt"></span><button type="button" id="vpx">닫기 ✕</button></div><div id="vpb" style="flex:1;display:flex"></div></div>
+<div class="vprev" id="vp"><div class="bar"><span id="vpt"></span><button type="button" id="vpx">닫기 ✕</button></div><div id="vpb" style="flex:1;display:flex"></div><div class="gpg" id="gpg"><button type="button" id="gp-p">‹ 앞 장</button><span id="gp-n"></span><button type="button" id="gp-x" class="nx">다음 장 ›</button><button type="button" id="gp-d">내려받기</button><button type="button" id="gp-s" class="sh">카톡 전달</button></div></div>
 <main id="m"><p class="empty">불러오는 중…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -174,7 +186,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
         GROUPS.forEach(function(g){groups[g]=[]});
         vlist.forEach(function(x,i){(groups[x.group]=groups[x.group]||[]).push([x,i])});
         return '<section class="vault"><h2>내 서류함 <small>바로 건네는 자료 · 원장 전용</small></h2><div class="vg">'+Object.keys(groups).filter(function(g){return groups[g].length}).map(function(g){
-          var gk=g.indexOf('내부')>=0?'int':g.indexOf('외부')>=0?'ext':'etc';var gh=gk==='ext'?'<div class="vbh"><b>외부 전달용</b><span>이 상자 안의 자료만 기관·외부에 보내도 됩니다</span></div>':gk==='int'?'<div class="vbh"><b>(주의) 내부용 · 외부 전달 금지</b><span>원장님만 보는 자료입니다. 밖으로 보내지 마세요</span></div>':'<div class="vbh"><b>'+esc(g)+'</b></div>';return '<section class="vbox '+gk+'">'+gh+groups[g].map(function(p){var x=p[0];var iw=(x.group||'').indexOf('내부')>=0;return '<div class="vi'+(x.s?' three':'')+(iw?' iw':'')+'"><div><b>'+(iw?'<em class="warn">(주의)</em> ':'')+esc(x.title)+'</b><span>'+esc(x.note||x.name)+' · '+kb(x.size)+(x.s?' · 올린 날 '+esc(x.t||''):'')+'</span></div><button type="button" class="pv" data-vv="'+p[1]+'">보기</button><button type="button" class="dl" data-vd="'+p[1]+'">내려받기</button>'+(CAN_SHARE?'<button type="button" class="sh" data-vs="'+p[1]+'">카톡 전달</button>':'')+(x.s?'<button type="button" class="x" data-vx="'+p[1]+'" aria-label="지우기">지우기</button>':'')+'</div>'}).join('')+'</section>'}).join('')+'</div>'+
+          var gk=g.indexOf('내부')>=0?'int':g.indexOf('외부')>=0?'ext':'etc';var gh=gk==='ext'?'<div class="vbh"><b>외부 전달용</b><span>이 상자 안의 자료만 기관·외부에 보내도 됩니다</span></div>':gk==='int'?'<div class="vbh"><b>(주의) 내부용 · 외부 전달 금지</b><span>원장님만 보는 자료입니다. 밖으로 보내지 마세요</span></div>':'<div class="vbh"><b>'+esc(g)+'</b></div>';if(groups[g].length>6){var tot=groups[g].reduce(function(t,p){return t+(p[0].size||0)},0);return '<section class="vbox '+gk+'">'+gh+'<div class="vi gal"><div><b>'+esc(g)+' · '+groups[g].length+'점</b><span>누르면 한 장씩 넘겨 보며 내려받기 · 카톡 전달 · 모두 '+kb(tot)+'</span></div><button type="button" class="open" data-vg="'+esc(g)+'">펼쳐 보기 →</button></div></section>'}return '<section class="vbox '+gk+'">'+gh+groups[g].map(function(p){var x=p[0];var iw=(x.group||'').indexOf('내부')>=0;return '<div class="vi'+(x.s?' three':'')+(iw?' iw':'')+'"><div><b>'+(iw?'<em class="warn">(주의)</em> ':'')+esc(x.title)+'</b><span>'+esc(x.note||x.name)+' · '+kb(x.size)+(x.s?' · 올린 날 '+esc(x.t||''):'')+'</span></div><button type="button" class="pv" data-vv="'+p[1]+'">보기</button><button type="button" class="dl" data-vd="'+p[1]+'">내려받기</button>'+(CAN_SHARE?'<button type="button" class="sh" data-vs="'+p[1]+'">카톡 전달</button>':'')+(x.s?'<button type="button" class="x" data-vx="'+p[1]+'" aria-label="지우기">지우기</button>':'')+'</div>'}).join('')+'</section>'}).join('')+'</div>'+
           '<div class="vup"><p><b>파일 올리기</b><br><span style="font-size:13px;color:var(--muted)">사진 · PDF · 한글 · 워드 · 엑셀, <span style="white-space:nowrap">한 파일 50MB까지</span></span></p><div class="row"><label class="pick" for="vfile">파일 고르기</label><input type="file" id="vfile"><input type="text" id="vtitle" placeholder="이름 (비우면 파일 이름)"><select id="vto"><option value="vault">내 서류함 (나만)</option><option value="t">강사방</option><option value="m:all">학부모방 · 학생방 모두</option><option value="m:학부모">학부모방만</option><option value="m:학생">학생방만</option></select><select id="vgrp">'+GROUPS.map(function(g){return '<option'+(g==='기타 자료'?' selected':'')+'>'+esc(g)+'</option>'}).join('')+'</select><button type="button" id="vgo" disabled>올리기</button></div><p class="st2" id="vst">이 기기에서 잠근 뒤 올라갑니다. 내 서류함은 원장만, 강사방은 승인된 강사만, 학부모·학생방은 가입한 회원만 엽니다.</p></div></section>';
       });
     }).catch(function(){return '<section class="vault"><h2>내 서류함</h2><p class="empty">서류함을 열지 못했습니다.</p></section>'});
@@ -206,6 +218,8 @@ h2{flex-wrap:wrap;gap:4px 14px}
     if(e.target.id==='rlist'){roomsList();return}
     if(rx){var pr=rx.dataset.rx.split('|'),dir=pr[0],fid=pr[1];if(!confirm('이 자료를 지울까요? 지우면 되살릴 수 없습니다.'))return;
       rIndex(dir).then(function(ix){ix=ix.filter(function(y){return y.f!==fid});return rPut(dir,'index.bin',new TextEncoder().encode(JSON.stringify(ix)))}).then(function(){return sb.storage.from('sp-room').remove([dir+'/f/'+fid])}).then(roomsList).catch(function(err){alert('지우지 못했습니다. '+(err&&err.message?err.message:''))});return}
+    var vg=e.target.closest('[data-vg]');
+    if(vg){var gn=vg.getAttribute('data-vg');GAL=[];vlist.forEach(function(x,i){if(x.group===gn)GAL.push(i)});GI=0;document.getElementById('gpg').classList.add('on');document.getElementById('gp-s').style.display=CAN_SHARE?'':'none';galShow();return}
     var sh=e.target.closest('[data-vs]');
     if(sh){var q=+sh.dataset.vs;vblob(q).then(function(b){var fl=new File([b],vlist[q].name,{type:b.type});return navigator.share({files:[fl],title:vlist[q].title})}).catch(function(err){if(err&&err.name!=='AbortError')alert('보내지 못했습니다. 내려받은 뒤 카톡에서 첨부해 주십시오.')});return}
     var d=e.target.closest('[data-vd]'),v=e.target.closest('[data-vv]'),x=e.target.closest('[data-vx]');
@@ -228,7 +242,16 @@ h2{flex-wrap:wrap;gap:4px 14px}
     if(d){var i=+d.dataset.vd;vblob(i).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=vlist[i].name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)})}
     if(v){var j=+v.dataset.vv;vblob(j).then(function(b){var u=URL.createObjectURL(b),box=document.getElementById('vpb'),m=vlist[j].mime||'';document.getElementById('vpt').textContent=vlist[j].title;box.innerHTML=m.indexOf('image')===0?'<img src="'+u+'" alt="">':(m==='application/pdf'||m.indexOf('text')===0)?'<iframe src="'+u+'"></iframe>':'<p style="color:#F1E3C3;margin:30px">이 파일은 미리보기가 되지 않습니다. 내려받기로 여십시오.</p>';document.getElementById('vp').classList.add('on')})}
   });
-  document.getElementById('vpx').onclick=function(){document.getElementById('vp').classList.remove('on');document.getElementById('vpb').innerHTML=''};
+  var GAL=null,GI=0;
+  function galShow(){var j=GAL[GI],x=vlist[j];document.getElementById('vpt').textContent=x.title;document.getElementById('gp-n').textContent=(GI+1)+' / '+GAL.length;document.getElementById('gp-p').disabled=GI===0;document.getElementById('gp-x').disabled=GI===GAL.length-1;
+    var box=document.getElementById('vpb');box.innerHTML='<p style="color:#F1E3C3;margin:30px auto">불러오는 중…</p>';document.getElementById('vp').classList.add('on');
+    vblob(j).then(function(b){if(GAL&&GAL[GI]!==j)return;var u=URL.createObjectURL(b);box.innerHTML=(x.mime||'').indexOf('image')===0?'<img src="'+u+'" alt="">':'<iframe src="'+u+'"></iframe>'})}
+  document.getElementById('gp-p').onclick=function(){if(GI>0){GI--;galShow()}};
+  document.getElementById('gp-x').onclick=function(){if(GI<GAL.length-1){GI++;galShow()}};
+  document.getElementById('gp-d').onclick=function(){var j=GAL[GI];vblob(j).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=vlist[j].name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)})};
+  document.getElementById('gp-s').onclick=function(){var j=GAL[GI];vblob(j).then(function(b){return navigator.share({files:[new File([b],vlist[j].name,{type:b.type})],title:vlist[j].title})}).catch(function(err){if(err&&err.name!=='AbortError')alert('보내지 못했습니다. 내려받은 뒤 카톡에서 첨부해 주십시오.')})};
+  (function(){var x0=null,el=document.getElementById('vpb');el.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});el.addEventListener('touchend',function(e){if(x0===null||!GAL)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>60){if(dx<0&&GI<GAL.length-1){GI++;galShow()}else if(dx>0&&GI>0){GI--;galShow()}}},{passive:true})})();
+  document.getElementById('vpx').onclick=function(){GAL=null;document.getElementById('gpg').classList.remove('on');document.getElementById('vp').classList.remove('on');document.getElementById('vpb').innerHTML=''};
   var vhtml=null;
   // 방 열어 보기 · 강사 관리
   var ST={pending:'승인 대기',approved:'승인됨',stopped:'중지'}, STAFF=[];
