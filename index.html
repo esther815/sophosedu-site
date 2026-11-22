@@ -202,6 +202,10 @@ section[id]{scroll-margin-top:84px}
 .twocol{margin-top:64px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:start}
 @media (max-width:900px){.cs{padding:100px 0 90px}.twocol{grid-template-columns:1fr;gap:40px}.cs-head{grid-template-columns:1fr}.cs-no{grid-row:auto}}
 .fig{position:relative;overflow:hidden}
+.oldbook{position:relative;margin:0 7px 7px 0;padding:14px;background:#EFE2C8;border:1px solid #CDB38A;box-shadow:0 1px 0 #fff inset,0 18px 40px rgba(62,17,27,.16),6px 6px 0 -1px #E4D3B2,6px 6px 0 0 #CDB38A}
+.oldbook::before{content:"";position:absolute;inset:7px;border:1px solid rgba(140,98,52,.45);pointer-events:none;z-index:1}
+.oldbook img{display:block;width:100%;filter:none!important}
+.fig:hover .oldbook img{transform:none}
 .fig img{width:100%;object-fit:cover;transition:transform 1.4s ease}
 .fig:hover img{transform:scale(1.03)}
 .fig figcaption{margin-top:12px;font-size:14px;color:var(--muted)}
@@ -641,8 +645,8 @@ footer .bar{margin-top:56px;height:12px}
     <p class="lead rv" style="max-width:760px;margin:22px 0 0">요약본이 아니라 원전에 가까운 글을 끝까지 읽습니다. 한 권을 붙들고 묻고 답하는 동안 생각이 깊어지고, 그렇게 읽은 책은 학교 서·논술형 평가와 논술, 면접에서 꺼내 쓰는 고급 글감이 됩니다.</p>
     <div class="twocol">
       <figure class="fig rv" style="margin:0">
-        <img src="img/library.jpg" alt="전구 조명 아래 긴 원목 테이블과 책장이 이어진 도서관" style="aspect-ratio:4/5">
-        <figcaption>긴 책상에 앉아, 한 권을 끝까지 읽습니다.</figcaption>
+        <div class="oldbook"><img src="img/classics_old.jpg" alt="동서양 고전 작가들을 수채화로 그린 그림" style="aspect-ratio:1055/1491"></div>
+        <figcaption>시대를 건너온 질문, 동서양 고전을 <span class="nowrap">한 권씩 끝까지 읽습니다.</span></figcaption>
       </figure>
       <div class="rv">
         <ul class="facts">
@@ -891,7 +895,8 @@ footer .bar{margin-top:56px;height:12px}
       <div><p class="kicker">Sophos Brief · 입시 노트</p><h2 class="h2">제목만 읽어도<br>입시가 보입니다.</h2></div>
       <a class="btn btn-wine" href="brief.html">입시 노트 전체 보기 →</a>
     </div>
-    <div class="bt-list rv"><!--BRIEF:START--><a class="bt-item" href="brief.html#2611-20-csat-jeongsi"><span class="bt-cat">수능</span><span class="bt-t">쉬운 수능, 정시 당락은 수학과 <span style="white-space:nowrap">탐구가 가른다</span></span><span class="bt-d">국어·영어 변별력이 약해지면서 수학·탐구가 핵심 변수로 떠올랐다. 재수생 규모와 사탐 선택 급증도 등급에 <span style="white-space:nowrap">영향을 준다.</span></span><time>2026. 11. 20.(금)</time></a><a class="bt-item" href="brief.html#2611-20-essay-strategy"><span class="bt-cat">논술</span><span class="bt-t">남은 논술, 가채점으로 응시 <span style="white-space:nowrap">여부부터 정한다</span></span><span class="bt-d">수시에 합격하면 정시에 지원할 수 없다. 가채점과 최저 기준을 맞춰 보고 볼 시험과 접을 시험을 <span style="white-space:nowrap">나눠야 한다.</span></span><time>2026. 11. 20.(금)</time></a><a class="bt-item" href="brief.html#2611-19-csat-level"><span class="bt-cat">수능</span><span class="bt-t">2027 수능, 국어는 쉬워지고 수학은 <span style="white-space:nowrap">작년 수준이었다</span></span><span class="bt-d">지문 정보량이 줄어든 국어가 평이했다. 수학은 작년과 비슷하거나 다소 어려워 <span style="white-space:nowrap">상위권을 가른다.</span></span><time>2026. 11. 19.(목)</time></a><!--BRIEF:END--></div>
+    <div class="bt-list rv"><!--BRIEF:START--><a class="bt-item" href="brief.html#2611-20-csat-jeongsi"><span class="bt-cat">수능</span><span class="bt-t">쉬운 수능, 정시 당락은 수학과 <span style="white-space:nowrap">탐구가 가른다</span></span><span class="bt-d">국어·영어 변별력이 약해지면서 수학·탐구가 핵심 변수로 떠올랐다. 재수생 규모와 사탐 선택 급증도 등급에 <span style="white-space:nowrap">영향을 준다.</span></span><time>2026. 11. 20.(금)</time></a><a class="bt-item" href="brief.html#2611-20-essay-strategy"><span class="bt-cat">논술</span><span class="bt-t">남은 논술, 가채점으로 응시 <span style="white-space:nowrap">여부부터 정한다</span></span><span class="bt-d">수시에 합격하면 정시에 지원할 수 없다. 가채점과 최저 기준을 맞춰 보고 볼 시험과 접을 시험을 <span style="white-space:nowrap">나눠야 한다.</span></span><time>2026. 11. 20.(금)</time></a><a class="bt-item" href="brief.html#2611-19-csat-level"><span class="bt-cat">수능</span><span class="bt-t">2027 수능, 국어는 쉬워지고 수학은 <span style="white-space:nowrap">작년 수준이었다</span></span><span class="bt-d">지문 정보량이 줄어든 국어가 평이했다. 수학은 작년과 비슷하거나 다소 어려워 <span style="white-space:nowrap">상위권을 가른다.</span></span><time>2026. 11. 19.(목)</time></a>
+<!--BRIEF:END--></div>
   </div>
 </section>
 
