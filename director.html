@@ -168,7 +168,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   // 내 서류함 — 원장·관리자 전용 열쇠로만 열림
   // 기본 서류: vault/*.bin(공개 저장소, 암호화) · 올린 자료: Supabase 비공개 보관함 sp-vault(원장만 접근, 올리기 전에 이 기기에서 암호화)
   var CAN_SHARE=(function(){try{return !!(navigator.canShare&&navigator.canShare({files:[new File(['x'],'x.pdf',{type:'application/pdf'})]}))}catch(e){return false}})();
-  var vkey=null, vlist=[], BK='sp-vault', GROUPS=['글쓰기','리포트 · 결과지','정산 서류','외부 전달용','공지','수업 일정','수업 자료','고원재 교재 양식','내부용 · 외부 전달 금지','사진 · 로고','기타 자료'];
+  var vkey=null, vlist=[], BK='sp-vault', GROUPS=['한 바닥 쓰기 활동지','원고지','진단 · 심사','리포트 · 결과지','고원재 교재 양식','공지','수업 일정','수업 자료','정산 서류','외부 전달용','내부용 · 외부 전달 금지','사진 · 로고','기타 자료'];
   function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
   function decBuf(buf){return crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(buf.slice(0,12))},vkey,buf.slice(12))}
   function encBuf(buf){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},vkey,buf).then(function(c){var o=new Uint8Array(12+c.byteLength);o.set(iv,0);o.set(new Uint8Array(c),12);return new Blob([o],{type:'application/octet-stream'})})}
