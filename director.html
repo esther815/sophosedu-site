@@ -60,7 +60,7 @@ td.n{text-align:right;font-variant-numeric:tabular-nums}
 .vi button{border:1px solid var(--line);background:#FFFDF9;font:inherit;font-size:13.5px;padding:7px 14px;cursor:pointer;color:var(--ink)}
 .vi button.dl{background:var(--wine2);border-color:var(--wine2);color:#fff}
 .vi button:hover{opacity:.85}
-.vprev{position:fixed;inset:0;background:rgba(24,8,12,.88);display:none;z-index:120;flex-direction:column}
+.vprev{position:fixed;inset:0;background:rgba(24,8,12,.97);display:none;z-index:120;flex-direction:column}
 .vprev.on{display:flex}
 .vprev .bar{display:flex;justify-content:space-between;padding:12px 20px;color:#F1E3C3}
 .vprev .bar button{background:none;border:1px solid rgba(241,227,195,.4);color:#F1E3C3;font:inherit;padding:6px 14px;cursor:pointer}
@@ -240,12 +240,12 @@ h2{flex-wrap:wrap;gap:4px 14px}
     if(x){var k=+x.dataset.vx,it=vlist[k];if(!window.confirm('「'+it.title+'」을 서류함에서 지울까요? 지우면 되살릴 수 없습니다.'))return;
       sindex().then(function(ix){ix=ix.filter(function(y){return y.f!==it.f});return sput('index.bin',new TextEncoder().encode(JSON.stringify(ix)))}).then(function(){return sb.storage.from(BK).remove(['f/'+it.f])}).then(refresh).catch(function(err){alert('지우지 못했습니다. '+(err&&err.message?err.message:''))});return}
     if(d){var i=+d.dataset.vd;vblob(i).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=vlist[i].name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)})}
-    if(v){var j=+v.dataset.vv;vblob(j).then(function(b){var u=URL.createObjectURL(b),box=document.getElementById('vpb'),m=vlist[j].mime||'';document.getElementById('vpt').textContent=vlist[j].title;box.innerHTML=m.indexOf('image')===0?'<img src="'+u+'" alt="">':(m==='application/pdf'||m.indexOf('text')===0)?'<iframe src="'+u+'"></iframe>':'<p style="color:#F1E3C3;margin:30px">이 파일은 미리보기가 되지 않습니다. 내려받기로 여십시오.</p>';document.getElementById('vp').classList.add('on')})}
+    if(v){var j=+v.dataset.vv;vblob(j).then(function(b){var u=URL.createObjectURL(b),box=document.getElementById('vpb'),m=vlist[j].mime||'';document.getElementById('vpt').textContent=vlist[j].title;box.innerHTML=m.indexOf('image')===0?'<img src="'+u+'" alt="">':m.indexOf('text')===0?'<iframe src="'+u+'"></iframe>':m==='application/pdf'?'':'<p style="color:#F1E3C3;margin:30px">이 파일은 미리보기가 되지 않습니다. 내려받기로 여십시오.</p>';document.getElementById('vp').classList.add('on');if(m==='application/pdf')spPdf(b,box)})}
   });
   var GAL=null,GI=0;
   function galShow(){var j=GAL[GI],x=vlist[j];document.getElementById('vpt').textContent=x.title;document.getElementById('gp-n').textContent=(GI+1)+' / '+GAL.length;document.getElementById('gp-p').disabled=GI===0;document.getElementById('gp-x').disabled=GI===GAL.length-1;
     var box=document.getElementById('vpb');box.innerHTML='<p style="color:#F1E3C3;margin:30px auto">불러오는 중…</p>';document.getElementById('vp').classList.add('on');
-    vblob(j).then(function(b){if(GAL&&GAL[GI]!==j)return;var u=URL.createObjectURL(b);box.innerHTML=(x.mime||'').indexOf('image')===0?'<img src="'+u+'" alt="">':'<iframe src="'+u+'"></iframe>'})}
+    vblob(j).then(function(b){if(GAL&&GAL[GI]!==j)return;var u=URL.createObjectURL(b);if((x.mime||'').indexOf('image')===0)box.innerHTML='<img src="'+u+'" alt="">';else if(x.mime==='application/pdf')spPdf(b,box);else box.innerHTML='<iframe src="'+u+'"></iframe>'})}
   document.getElementById('gp-p').onclick=function(){if(GI>0){GI--;galShow()}};
   document.getElementById('gp-x').onclick=function(){if(GI<GAL.length-1){GI++;galShow()}};
   document.getElementById('gp-d').onclick=function(){var j=GAL[GI];vblob(j).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=vlist[j].name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)})};
@@ -277,6 +277,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   });
 })();
 </script>
+<script src="/js/pdfview.js"></script>
 <script src="/nav.js" defer></script>
 </body>
 </html>

@@ -296,9 +296,9 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   function roomBlob(i){var x=RITEMS[i];return roomGet(RDIR+'/f/'+x.f,RKEY).then(function(d){return new Blob([d],{type:x.mime||'application/octet-stream'})})}
   function roomOpen(i){var x=RITEMS[i];SEQ=null;$('pg').classList.remove('on');$('vw-t').textContent=x.title+' · 불러오는 중';$('vw').classList.add('on');
     roomBlob(i).then(function(b){var m=x.mime||'';
-      if(m.indexOf('image')===0){$('vf').classList.add('hide');$('cv').classList.remove('hide');return createImageBitmap(b).then(function(img){paint(img,x.title)})}
+      if(m.indexOf('image')===0){var ph0=document.getElementById('pdfhold');if(ph0)ph0.style.display='none';$('vf').classList.add('hide');$('cv').classList.remove('hide');return createImageBitmap(b).then(function(img){paint(img,x.title)})}
       $('cv').classList.add('hide');var f=$('vf');f.classList.remove('hide');
-      if(m==='application/pdf'||m.indexOf('text')===0){f.src=URL.createObjectURL(b);$('vw-t').textContent=x.title}
+      if(m==='application/pdf'){f.classList.add('hide');var st=$('vw-s'),hold=document.getElementById('pdfhold');if(!hold){hold=document.createElement('div');hold.id='pdfhold';hold.style.cssText='display:flex;min-height:100%';st.appendChild(hold)}hold.style.display='flex';spPdf(b,hold);$('vw-t').textContent=x.title}else if(m.indexOf('text')===0){f.src=URL.createObjectURL(b);$('vw-t').textContent=x.title}
       else{f.removeAttribute('src');f.srcdoc='<p style="font:15px sans-serif;padding:30px;color:#555">이 파일은 미리보기가 되지 않습니다.</p>';$('vw-t').textContent=x.title}
     }).catch(function(){$('vw-t').textContent='열지 못했습니다. 다시 눌러 주십시오.'})}
   document.addEventListener('click',function(e){
@@ -427,7 +427,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
       for(var yy=-img.height;yy<img.height;yy+=img.width/6)for(var xx=-img.width;xx<img.width;xx+=img.width/1.6)x.fillText(stamp,xx,yy);
       x.restore(); $('vw-t').textContent=t; log('sample_view',t);
   }
-  function closeV(){SEQ=null;$('pg').classList.remove('on');$('vw').classList.remove('on');var c=$('cv');c.width=1;c.height=1;var f=$('vf');if(f.src&&f.src.indexOf('blob:')===0)URL.revokeObjectURL(f.src);f.removeAttribute('src');f.removeAttribute('srcdoc');f.classList.add('hide')}
+  function closeV(){var ph=document.getElementById('pdfhold');if(ph){ph.innerHTML='';ph.style.display='none'}SEQ=null;$('pg').classList.remove('on');$('vw').classList.remove('on');var c=$('cv');c.width=1;c.height=1;var f=$('vf');if(f.src&&f.src.indexOf('blob:')===0)URL.revokeObjectURL(f.src);f.removeAttribute('src');f.removeAttribute('srcdoc');f.classList.add('hide')}
   $('vw-x').onclick=closeV;
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeV()});
   $('vw').addEventListener('contextmenu',function(e){e.preventDefault()});
@@ -470,6 +470,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   log('visit','member'); load();
 })();
 </script>
+<script src="/js/pdfview.js"></script>
 <script src="/nav.js" defer></script>
 </body>
 </html>
