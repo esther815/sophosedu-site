@@ -88,7 +88,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 .nt b{grid-column:1;font-family:var(--serif);font-size:19px;color:var(--ink)}
 .nt>span:not(.k){grid-column:1;font-size:14px;color:var(--muted)}
 .nt em{grid-column:2;grid-row:1/4;font-style:normal;font-weight:700;color:var(--wine2);white-space:nowrap}
-.viewer{position:fixed;inset:0;z-index:50;background:rgba(24,8,12,.9);display:none;flex-direction:column}
+.viewer{position:fixed;inset:0;z-index:120;background:rgba(24,8,12,.9);display:none;flex-direction:column}
 .viewer.on{display:flex}
 .viewer .bar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;color:#F1E3C3;font-size:14.5px}
 .viewer .bar button{background:none;border:1px solid rgba(241,227,195,.4);color:#F1E3C3;font:inherit;padding:7px 16px;cursor:pointer}
@@ -112,6 +112,16 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 .ri .dl{background:var(--wine2);border-color:var(--wine2);color:#fff}
 .empty2{padding:22px;border:1px dashed var(--line);color:var(--muted);font-size:14.5px;background:#fff}
 .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.vol .open{display:flex;width:calc(100% - 52px);margin:18px 26px 24px;justify-content:center;align-items:center;gap:8px;min-height:50px;background:var(--wine2);color:#fff;border:0;font:inherit;font-weight:700;font-size:15.5px;cursor:pointer}
+.vol .open:hover{background:var(--wine)}
+.vol li{padding:10px 26px;font-size:15px;color:var(--text);display:flex;gap:12px}
+.vol li i{font-style:normal;font-family:var(--latin);color:var(--gold);min-width:16px}
+.pager{display:none;justify-content:center;align-items:center;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom));border-top:1px solid rgba(241,227,195,.2)}
+.pager.on{display:flex}
+.pager button{min-width:120px;min-height:46px;background:none;border:1px solid rgba(241,227,195,.45);color:#F1E3C3;font:inherit;font-size:15px;cursor:pointer}
+.pager button.nx{background:#F1E3C3;color:#3E111B;font-weight:700;border-color:#F1E3C3}
+.pager button:disabled{opacity:.3;cursor:default}
+.pager span{color:#F1E3C3;font-family:var(--latin);letter-spacing:.12em;min-width:56px;text-align:center}
 .viewer iframe{width:100%;height:100%;border:0;background:#fff}
 .load{padding:80px 0;text-align:center;color:var(--muted);font-family:var(--latin);letter-spacing:.3em}
 @media (max-width:820px){.gate,.vols{grid-template-columns:1fr}.hd nav{display:none}form .row{grid-template-columns:1fr;gap:6px}form .row>label,form .row>.lb{padding-top:0}.card{padding:26px 20px}main{padding-top:40px}}
@@ -250,6 +260,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 <div class="viewer" id="vw" role="dialog" aria-label="교재 보기">
   <div class="bar"><span id="vw-t"></span><button type="button" id="vw-x">닫기 ✕</button></div>
   <div class="stage" id="vw-s"><canvas id="cv"></canvas><iframe id="vf" class="hide" title="자료 보기"></iframe></div>
+  <div class="pager" id="pg"><button type="button" id="pg-p">‹ 앞 쪽</button><span id="pg-n"></span><button type="button" class="nx" id="pg-x">다음 쪽 ›</button></div>
 </div>
 
 <footer class="ft">주니어솔로몬학원 · 중부교육지원청 제3336호 · 서울 용산구 이촌로 200, 4층 403호 (이촌동, LG프라자)<br>소포스에듀(코칭 서비스)는 학원 교습과정과 구분하여 운영합니다. · © Sophos Edu. 교재의 모든 쪽은 저작권의 보호를 받습니다.</footer>
@@ -283,7 +294,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   }
   var RITEMS=[],RKEY=null,RDIR='';
   function roomBlob(i){var x=RITEMS[i];return roomGet(RDIR+'/f/'+x.f,RKEY).then(function(d){return new Blob([d],{type:x.mime||'application/octet-stream'})})}
-  function roomOpen(i){var x=RITEMS[i];$('vw-t').textContent=x.title+' · 불러오는 중';$('vw').classList.add('on');
+  function roomOpen(i){var x=RITEMS[i];SEQ=null;$('pg').classList.remove('on');$('vw-t').textContent=x.title+' · 불러오는 중';$('vw').classList.add('on');
     roomBlob(i).then(function(b){var m=x.mime||'';
       if(m.indexOf('image')===0){$('vf').classList.add('hide');$('cv').classList.remove('hide');return createImageBitmap(b).then(function(img){paint(img,x.title)})}
       $('cv').classList.add('hide');var f=$('vf');f.classList.remove('hide');
@@ -373,7 +384,8 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
         list.forEach(function(x){(byVol[x.vol]=byVol[x.vol]||{vol:x.vol,title:x.title,author:x.author,pages:[]}).pages.push(x)});
         $('vols').innerHTML=Object.keys(byVol).sort(function(a,b){return a-b}).map(function(v){var o=byVol[v];
           return '<article class="vol"><div class="top"><span class="no">'+esc(o.vol)+'</span><div><p class="k" style="font-size:11.5px">고전은 원래 재미있다</p><h3>「'+esc(o.title)+'」</h3><p class="au">'+esc(o.author)+'</p></div></div><ol>'+
-          o.pages.map(function(p,i){return '<li><button type="button" data-f="'+esc(p.f)+'" data-t="'+esc(o.vol+'권 · '+p.page)+'"><span>'+esc(p.page)+'</span><em>VIEW</em></button></li>'}).join('')+'</ol></article>'}).join('');
+          o.pages.map(function(p,i){return '<li><i>'+(i+1)+'</i>'+esc(p.page)+'</li>'}).join('')+'</ol><button type="button" class="open" data-vol="'+esc(o.vol)+'">교재 펼쳐 보기 →</button></article>'}).join('');
+        VOLS=byVol;
         var rl=prof&&prof.role==='학생'?'학생방':prof&&prof.role==='학부모'?'학부모방':'회원 서재';
         $('lib-h1').textContent=rl;
         $('who').textContent=(prof&&prof.nickname?prof.nickname+' 님':'회원')+' · '+rl;
@@ -390,8 +402,17 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   }
 
   $('notes').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;open(b.getAttribute('data-f'),b.getAttribute('data-t'))});
-  $('vols').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;open(b.getAttribute('data-f'),b.getAttribute('data-t'))});
-  function open(f,t){
+  var VOLS={},SEQ=null,SI=0;
+  function seqGo(i){if(!SEQ)return;SI=Math.max(0,Math.min(SEQ.pages.length-1,i));var p=SEQ.pages[SI];
+    open(p.f,SEQ.vol+'권 · '+p.page,true);$('pg-n').textContent=(SI+1)+' / '+SEQ.pages.length;$('pg-p').disabled=SI===0;
+    var last=SI===SEQ.pages.length-1;$('pg-x').textContent=last?'닫기':'다음 쪽 ›';$('vw-s').scrollTop=0}
+  $('vols').addEventListener('click',function(e){var b=e.target.closest('button[data-vol]');if(!b)return;SEQ=VOLS[b.getAttribute('data-vol')];if(!SEQ)return;$('pg').classList.add('on');seqGo(0)});
+  $('pg-p').onclick=function(){seqGo(SI-1)};
+  $('pg-x').onclick=function(){if(SEQ&&SI<SEQ.pages.length-1)seqGo(SI+1);else closeV()};
+  document.addEventListener('keydown',function(e){if(!SEQ||!$('vw').classList.contains('on'))return;if(e.key==='ArrowRight')seqGo(SI+1);if(e.key==='ArrowLeft')seqGo(SI-1)});
+  (function(){var x0=null;$('vw-s').addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});$('vw-s').addEventListener('touchend',function(e){if(x0===null||!SEQ)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>60)seqGo(SI+(dx<0?1:-1))},{passive:true})})();
+  function open(f,t,keep){
+    if(!keep){SEQ=null;$('pg').classList.remove('on')}
     $('vw-t').textContent=t+' · 불러오는 중'; $('vw').classList.add('on');
     $('vf').classList.add('hide');$('cv').classList.remove('hide');
     dec(f).then(function(d){return createImageBitmap(new Blob([d],{type:'image/jpeg'}))}).then(function(img){
@@ -406,7 +427,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
       for(var yy=-img.height;yy<img.height;yy+=img.width/6)for(var xx=-img.width;xx<img.width;xx+=img.width/1.6)x.fillText(stamp,xx,yy);
       x.restore(); $('vw-t').textContent=t; log('sample_view',t);
   }
-  function closeV(){$('vw').classList.remove('on');var c=$('cv');c.width=1;c.height=1;var f=$('vf');if(f.src&&f.src.indexOf('blob:')===0)URL.revokeObjectURL(f.src);f.removeAttribute('src');f.removeAttribute('srcdoc');f.classList.add('hide')}
+  function closeV(){SEQ=null;$('pg').classList.remove('on');$('vw').classList.remove('on');var c=$('cv');c.width=1;c.height=1;var f=$('vf');if(f.src&&f.src.indexOf('blob:')===0)URL.revokeObjectURL(f.src);f.removeAttribute('src');f.removeAttribute('srcdoc');f.classList.add('hide')}
   $('vw-x').onclick=closeV;
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeV()});
   $('vw').addEventListener('contextmenu',function(e){e.preventDefault()});
