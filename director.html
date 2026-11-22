@@ -125,6 +125,11 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .gpg span{color:#F1E3C3;min-width:60px;text-align:center;letter-spacing:.1em}
 .vi.gal b{color:var(--ink)}
 .vi.gal .open{background:var(--wine2);border:1px solid var(--wine2);color:#fff;font:inherit;font-size:14px;padding:8px 16px;cursor:pointer;min-height:40px}
+.find{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--wine2);color:var(--gold-p);padding:18px 24px;margin-bottom:22px;border:1px solid var(--wine)}
+.find b{display:block;font-family:'Noto Serif KR',serif;font-size:19px;color:#fff;font-weight:700}
+.find span{font-size:13.5px;color:var(--gold-l)}
+.find a{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;background:var(--gold-p);color:var(--wine);font-weight:700;text-decoration:none;white-space:nowrap}
+.find a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -168,7 +173,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   // 내 서류함 — 원장·관리자 전용 열쇠로만 열림
   // 기본 서류: vault/*.bin(공개 저장소, 암호화) · 올린 자료: Supabase 비공개 보관함 sp-vault(원장만 접근, 올리기 전에 이 기기에서 암호화)
   var CAN_SHARE=(function(){try{return !!(navigator.canShare&&navigator.canShare({files:[new File(['x'],'x.pdf',{type:'application/pdf'})]}))}catch(e){return false}})();
-  var vkey=null, vlist=[], BK='sp-vault', GROUPS=['한 바닥 쓰기 활동지','원고지','진단 · 심사','리포트 · 결과지','고원재 교재 양식','공지','수업 일정','수업 자료','정산 서류','외부 전달용','내부용 · 외부 전달 금지','사진 · 로고','기타 자료'];
+  var vkey=null, vlist=[], BK='sp-vault', GROUPS=['한 바닥 쓰기 활동지','원고지','진단 · 심사','리포트 · 결과지','고원재 교재 양식','포스터 · 홍보물','공지','수업 일정','수업 자료','정산 서류','외부 전달용','내부용 · 외부 전달 금지','사진 · 로고','기타 자료'];
   function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
   function decBuf(buf){return crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(buf.slice(0,12))},vkey,buf.slice(12))}
   function encBuf(buf){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},vkey,buf).then(function(c){var o=new Uint8Array(12+c.byteLength);o.set(iv,0);o.set(new Uint8Array(c),12);return new Blob([o],{type:'application/octet-stream'})})}
@@ -269,7 +274,8 @@ h2{flex-wrap:wrap;gap:4px 14px}
         '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)"><button type="button" class="rlb" id="rlist">강사방 · 회원방에 올린 자료 보기</button><div id="rlbox"></div></div></section>';
     });
   }
-  function load(){Promise.all([sb.rpc('sp_funnel',{p_days:days}),vhtml?Promise.resolve(vhtml):vault(),rooms().catch(function(){return ''})]).then(function(a){var r=a[0];vhtml=a[1];var rh=a[2];if(r.error){M.innerHTML=vhtml+rh+'<p class="deny">불러오지 못했습니다. '+esc(r.error.message)+'</p>';return}render(r.data);M.insertAdjacentHTML('afterbegin',vhtml+rh)})}
+  var FIND='<section class="find"><div><b>자료 찾기</b><span>주니어솔로몬 · 소포스에듀 · 포스터 자료의 위치를 한곳에 · claude.ai 원장님 계정으로만 열림</span></div><a href="https://claude.ai/artifact/Cp4SJsqoqrQP5dc4UXXAXP" target="_blank" rel="noopener">자료 찾기 열기 →</a></section>';
+  function load(){Promise.all([sb.rpc('sp_funnel',{p_days:days}),vhtml?Promise.resolve(vhtml):vault(),rooms().catch(function(){return ''})]).then(function(a){var r=a[0];vhtml=a[1];var rh=a[2];if(r.error){M.innerHTML=FIND+vhtml+rh+'<p class="deny">불러오지 못했습니다. '+esc(r.error.message)+'</p>';return}render(r.data);M.insertAdjacentHTML('afterbegin',FIND+vhtml+rh)})}
   document.getElementById('seg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;days=+b.dataset.d;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});load()});
   sb.auth.getSession().then(function(s){
     if(!s.data.session){try{sessionStorage.setItem('sp_next','director')}catch(_){}location.replace('member.html');return}
