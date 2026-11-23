@@ -140,4 +140,7 @@ footer{margin-top:70px;padding:34px 0 50px;border-top:1px solid var(--line);font
 function run(){var n=0;cards.forEach(function(c){var ok=(f==='전체'||c.getAttribute('data-cat')===f)&&(!q||c.textContent.indexOf(q)>=0);c.style.display=ok?'':'none';if(ok)n++});document.getElementById('empty').style.display=n?'none':'block'}
 [].forEach.call(document.querySelectorAll('.chip'),function(b){b.onclick=function(){f=b.getAttribute('data-f');[].forEach.call(document.querySelectorAll('.chip'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});run()}});
 document.querySelector('.q').addEventListener('input',function(e){q=e.target.value.trim();run()});})();
-</script><script src="/nav.js" defer></script></body></html>
+</script><script src="/nav.js" defer></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.JS_SITE='sophos'</script>
+<script src="assets/track.js?v=1"></script>
+</body></html>
