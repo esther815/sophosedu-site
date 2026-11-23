@@ -7,8 +7,8 @@
 <meta name="robots" content="noindex,nofollow">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; frame-src blob:; connect-src 'self' https://gyuuimwalbxsocnamtqk.supabase.co wss://gyuuimwalbxsocnamtqk.supabase.co; frame-ancestors 'none'; base-uri 'self'">
 <meta name="theme-color" content="#3E111B">
-<link rel="icon" type="image/png" href="img/director-32.png?v=1">
-<link rel="apple-touch-icon" href="img/director-touch-icon.png?v=1">
+<link rel="icon" type="image/png" href="img/director-32-v2.png">
+<link rel="apple-touch-icon" href="img/director-touch-icon-v2.png">
 <link rel="manifest" href="director.webmanifest">
 <meta name="apple-mobile-web-app-title" content="원장실">
 <meta name="application-name" content="원장실">
@@ -145,10 +145,11 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .door svg{width:86px;height:auto}.door b{font-family:'Noto Serif KR',serif;font-size:16px}.door span{font-size:12.5px;color:var(--muted);min-height:16px}
 .door:active{transform:translateY(1px)}
 .backbar{display:flex;align-items:center;gap:12px;margin:4px 0 14px}.backbar button{border:1px solid var(--line);background:#fff;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}.backbar b{font-family:'Noto Serif KR',serif;font-size:18px;color:var(--ink)}
-.find{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--wine2);color:var(--gold-p);padding:18px 24px;margin-bottom:22px;border:1px solid var(--wine)}
+.find{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#0B4F5B;color:#D9E6E4;padding:16px 20px;margin-bottom:22px;border:1px solid #10687A}
+.find .fi{display:flex;align-items:center;gap:14px}.find img{width:46px;height:46px;border-radius:11px;flex:none}
 .find b{display:block;font-family:'Noto Serif KR',serif;font-size:19px;color:#fff;font-weight:700}
-.find span{font-size:13.5px;color:var(--gold-l)}
-.find a{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;background:var(--gold-p);color:var(--wine);font-weight:700;text-decoration:none;white-space:nowrap}
+.find span{font-size:13.5px;color:#BFD3D0}
+.find a{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;background:#D9BE8A;color:#0B4F5B;font-weight:700;text-decoration:none;white-space:nowrap}
 .find a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 </style>
 </head>
@@ -295,7 +296,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
         '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)"><button type="button" class="rlb" id="rlist">강사방 · 회원방에 올린 자료 보기</button><div id="rlbox"></div></div></section>';
     });
   }
-  var FIND='<section class="find"><div><b>자료 찾기</b><span>주니어솔로몬 · 소포스에듀 · 포스터 자료의 위치를 한곳에 · claude.ai 원장님 계정으로만 열림</span></div><a href="https://claude.ai/artifact/Cp4SJsqoqrQP5dc4UXXAXP" target="_blank" rel="noopener">자료 찾기 열기 →</a></section>';
+  var FIND='<section class="find"><div class="fi"><img src="img/find-192.png" alt=""><div><b>자료 찾기</b><span>주니어솔로몬 · 소포스에듀 · 포스터 자료의 위치를 한곳에 · claude.ai 원장님 계정으로만 열림</span></div></div><a href="https://claude.ai/artifact/Cp4SJsqoqrQP5dc4UXXAXP" target="_blank" rel="noopener">자료 찾기 열기 →</a></section>';
   var VIEW='lobby',BRAND='js',VL=null;
   function getVault(){if(!VL)VL=vault();return VL}
   function refresh(){VL=null;load()}

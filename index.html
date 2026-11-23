@@ -215,6 +215,7 @@ section[id]{scroll-margin-top:84px}
 .dsb-cover .dsb-art{aspect-ratio:1055/1491}
 .dsb-title{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);text-align:center;background:rgba(246,237,218,.9);border:1px solid #B79562;outline:1px solid rgba(183,149,98,.5);outline-offset:4px;padding:14px 30px 12px}
 .dsb-title b{display:block;font-family:'Noto Serif KR',serif;font-weight:700;font-size:clamp(28px,3.4vw,40px);letter-spacing:.32em;margin-right:-.32em;color:#3E111B;line-height:1.2}
+.dsb-title .dsb-brush{display:block;width:clamp(190px,24vw,280px);height:auto;margin:0 auto}
 .dsb-title span{display:block;margin-top:4px;font-size:13px;letter-spacing:.5em;margin-right:-.5em;color:#8A6A3E}
 .dsb-plate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse at center,#F4E8CF 0%,#E6D3AE 78%,#CDB089 100%)}
 .dsb-mono{font-family:'Cormorant Garamond','Noto Serif KR',serif;font-weight:600;font-size:clamp(56px,7vw,86px);color:#5C3A22;letter-spacing:.08em}
@@ -684,7 +685,7 @@ footer .bar{margin-top:56px;height:12px}
       <figure class="fig rv" style="margin:0">
         <div class="dsb" id="dsb" aria-roledescription="넘기는 책">
           <div class="dsb-book"><section class="dsb-pg dsb-cover on" data-i="0" aria-label="표지 · 독서상우">
-  <div class="dsb-art"><img src="img/classics_old.jpg" alt="동서양 고전 작가들을 그린 그림"><div class="dsb-title"><b lang="zh-Hant">讀書尙友</b><span>독서상우</span></div></div>
+  <div class="dsb-art"><img src="img/classics_old.jpg" alt="동서양 고전 작가들을 그린 그림"><div class="dsb-title"><img class="dsb-brush" src="img/dssu_brush.png" alt="讀書尙友" lang="zh-Hant"><span>독서상우</span></div></div>
   <div class="dsb-txt"><p class="dsb-k">COVER · 讀書尙友</p><p class="dsb-intro">책을 읽어 옛사람을 벗으로 삼는다. 『맹자』에서 온 말입니다. 고원재는 시대를 건너온 작가들과 한 권씩 마주 앉아 묻고 답합니다.</p><p class="dsb-hint">다음 장을 넘겨 오늘의 벗을 만나 보세요 →</p></div>
 </section>
 <section class="dsb-pg" data-i="1" data-img="img/authors/shakespeare.jpg" aria-label="윌리엄 셰익스피어">
@@ -1223,13 +1224,14 @@ footer .bar{margin-top:56px;height:12px}
 /* 내 화면으로 들어가기 — 주니어솔로몬과 같은 아래 고정 띠 */
 (function(){
   function on(){try{return !!localStorage.getItem('sb-gyuuimwalbxsocnamtqk-auth-token')}catch(e){return false}}
+  function adm(){try{return localStorage.getItem('sp_adm')==='1'}catch(e){return false}}
   function bar(){
     if(document.getElementById('spEntry'))return;
     var b=document.createElement('div');b.id='spEntry';
     b.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(251,247,240,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid #E7DCC8;padding:10px 14px calc(10px + env(safe-area-inset-bottom));font-family:"Noto Sans KR",sans-serif';
     var main='flex:1 1 0;min-height:50px;border-radius:999px;border:1px solid #3E111B;background:#3E111B;color:#F1E3C3;font-weight:600;font-size:15px;font-family:inherit;display:flex;align-items:center;justify-content:center;text-decoration:none;letter-spacing:.01em;padding:0;margin:0;box-shadow:none'.split(';').map(function(x){return x?x+'!important':''}).join(';');
     b.innerHTML=on()
-      ? '<div style="display:flex;max-width:520px;margin:0 auto"><a href="/member.html" style="'+main+'">✦ 내 화면으로 들어가기</a></div>'
+      ? '<div style="display:flex;max-width:520px;margin:0 auto"><a href="'+(adm()?'/director.html':'/member.html')+'" style="'+main+'">✦ '+(adm()?'원장실로 들어가기':'내 화면으로 들어가기')+'</a></div>'
       : '<div style="text-align:center;font-size:12.5px;color:#8A6A3E;margin-bottom:8px">재원생 가족과 선생님은 여기서 들어갑니다</div><div style="display:flex;max-width:520px;margin:0 auto"><a href="/member.html" style="'+main+'">✦ 회원 서재로 들어가기</a></div>';
     document.body.appendChild(b);
     var h=b.offsetHeight;document.body.style.paddingBottom=(h+8)+'px';
