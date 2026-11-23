@@ -128,8 +128,21 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .vi.gal .open{background:var(--wine2);border:1px solid var(--wine2);color:#fff;font:inherit;font-size:14px;padding:8px 16px;cursor:pointer;min-height:40px}
 .lob{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 18px}
 @media(max-width:720px){.lob{grid-template-columns:1fr}}
-.brand{padding:26px 22px 22px;border:1px solid var(--line);position:relative;background:#fff}
-.brand:before{content:'';position:absolute;inset:5px;border:1px solid var(--line);pointer-events:none}
+.brand{width:100%;text-align:left;font:inherit;cursor:pointer;display:flex;flex-direction:column;padding:26px 22px 20px;border:1px solid var(--line);position:relative;background:#fff;transition:transform .18s,box-shadow .18s,border-color .18s}
+.brand:before{content:'';position:absolute;inset:5px;border:1px solid var(--line);pointer-events:none;transition:border-color .18s}
+.brand.js:hover{transform:translateY(-3px);border-color:#5F3D66;box-shadow:0 10px 26px rgba(95,61,102,.16)}
+.brand.sp:hover{transform:translateY(-3px);border-color:#5C1A28;box-shadow:0 10px 26px rgba(92,26,40,.16)}
+.brand.js:hover:before{border-color:#C9A9CF}.brand.sp:hover:before{border-color:#D2A2AC}
+.brand:active{transform:translateY(-1px)}
+.brand:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.enter{display:flex;align-items:center;gap:11px;margin-top:auto;padding-top:16px;border-top:1px solid #E0D0B0}
+.enter svg{width:44px;height:auto;flex:none}
+.enter em{font-style:normal;font-family:'Noto Serif KR',serif;font-weight:700;font-size:16px}
+.enter i{font-style:normal;font-size:12.5px;color:var(--muted);border:1px solid var(--line);padding:2px 10px;border-radius:999px;white-space:nowrap}
+.enter u{text-decoration:none;margin-left:auto;font-size:22px;line-height:1;transition:transform .18s}
+.brand.js .enter em,.brand.js .enter u{color:#5F3D66}
+.brand.sp .enter em,.brand.sp .enter u{color:#5C1A28}
+.brand:hover .enter u{transform:translateX(4px)}
 .brand.js{background:#FBF8F3;border-color:#D9C48E}.brand.js:before{border-color:#EADFC2}
 .brand.sp{background:#FBF7F0;border-color:#D9BE8A}.brand.sp:before{border-color:#EADBC0}
 .brand .bm{height:30px;width:auto;display:block;margin-bottom:10px}
@@ -305,17 +318,17 @@ h2{flex-wrap:wrap;gap:4px 14px}
   var DOORSP='<svg viewBox="0 0 120 160" aria-hidden="true"><path d="M14 156V62a46 46 0 0 1 92 0v94z" fill="#5C1A28"/><path d="M24 156V64a36 36 0 0 1 72 0v92" fill="none" stroke="#D9BE8A" stroke-width="2"/><g fill="none" stroke="#E3C474" stroke-width="2.4" stroke-linejoin="round"><path d="M44 46l16-8 16 8z"/><path d="M47 49v14M55 49v14M65 49v14M73 49v14"/><path d="M43 64h34"/></g><circle cx="84" cy="108" r="4.5" fill="#E3C474"/><rect x="4" y="152" width="112" height="6" fill="#3E111B"/></svg>';
   function lobby(){
     return FIND+'<section class="lob">'+
-     '<div class="brand js"><img src="img/crown_gold.svg" alt="" class="bm"><p class="bl">JUNIOR SOLOMON</p><h2>주니어솔로몬</h2>'+
+     '<button type="button" class="brand js" data-door="js"><img src="img/crown_gold.svg" alt="" class="bm"><p class="bl">JUNIOR SOLOMON</p><h2>주니어솔로몬</h2>'+
      '<p class="cp">묻는 힘이 생각을 짓는다</p>'+
      '<p class="ph3"><span>생각하는 힘</span> · <span>질문하는 용기</span> · <span>표현하는 지혜</span></p>'+
-     '<p class="ph">질문이 자라 지혜가 된다.</p></div>'+
-     '<div class="brand sp"><svg class="bm" viewBox="0 0 74 62" fill="none" stroke="#5C1A28" stroke-width="3" stroke-linejoin="round"><path d="M6 16 37 4l31 12H6z"/><rect x="5" y="16" width="64" height="5"/><path d="M14 21v29M26 21v29M48 21v29M60 21v29"/><rect x="5" y="50" width="64" height="4"/><rect x="2" y="54" width="70" height="5"/></svg><p class="bl">SOPHOS EDU</p><h2>소포스에듀</h2>'+
+     '<p class="ph">질문이 자라 지혜가 된다.</p>'+
+     '<span class="enter">'+DOORJS+'<em>자료실 들어가기</em>'+(vlist.length?'<i>'+cnt('js')+'점</i>':'')+'<u>→</u></span></button>'+
+     '<button type="button" class="brand sp" data-door="sp"><svg class="bm" viewBox="0 0 74 62" fill="none" stroke="#5C1A28" stroke-width="3" stroke-linejoin="round"><path d="M6 16 37 4l31 12H6z"/><rect x="5" y="16" width="64" height="5"/><path d="M14 21v29M26 21v29M48 21v29M60 21v29"/><rect x="5" y="50" width="64" height="4"/><rect x="2" y="54" width="70" height="5"/></svg><p class="bl">SOPHOS EDU</p><h2>소포스에듀</h2>'+
      '<p class="cp">실천적 지혜교육</p>'+
      '<p class="ph3">공부의 양보다, 관리의 깊이로</p>'+
-     '<p class="ph">아이를 시스템에 맞추지 않습니다. 지금 이 학생에게 무엇이 가장 필요한지를 먼저 묻고, 그 답에 맞춰 수업을 차립니다.</p></div>'+
-     '</section>'+
-     '<section class="doors2"><button type="button" class="door" data-door="js">'+DOORJS+'<b>주니어솔로몬 자료실</b><span>'+(vlist.length?cnt('js')+'점':'')+'</span></button>'+
-     '<button type="button" class="door" data-door="sp">'+DOORSP+'<b>소포스에듀 자료실</b><span>'+(vlist.length?cnt('sp')+'점':'')+'</span></button></section>';
+     '<p class="ph">아이를 시스템에 맞추지 않습니다. 지금 이 학생에게 무엇이 가장 필요한지를 먼저 묻고, 그 답에 맞춰 수업을 차립니다.</p>'+
+     '<span class="enter">'+DOORSP+'<em>자료실 들어가기</em>'+(vlist.length?'<i>'+cnt('sp')+'점</i>':'')+'<u>→</u></span></button>'+
+     '</section>';
   }
   function back(){return '<div class="backbar"><button type="button" data-back="1">‹ 원장실로</button></div>'}
   function load(){
