@@ -294,18 +294,19 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
     return Object.keys(g).map(function(k){return '<p class="rg">'+esc(k)+'</p>'+g[k].map(function(p){var x=p[0];return '<div class="ri"><div><b>'+esc(x.title)+'</b><span>'+esc(x.t||'')+' · '+kb(x.size)+'</span></div><button type="button" data-ro="'+p[1]+'">보기</button>'+(canDl?'<button type="button" class="dl" data-rd="'+p[1]+'">내려받기</button>':'')+'</div>'}).join('')}).join('');
   }
   var RITEMS=[],RKEY=null,RDIR='';
-  function roomBlob(i){var x=RITEMS[i];return roomGet(RDIR+'/f/'+x.f,RKEY).then(function(d){return new Blob([d],{type:x.mime||'application/octet-stream'})})}
+  function mimeOf(x){var m=(x&&x.mime)||'';if(m&&m!=='application/octet-stream')return m;var e=String((x&&(x.name||x.title))||'').toLowerCase().split('.').pop();return {pdf:'application/pdf',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',heic:'image/heic',heif:'image/heic',txt:'text/plain'}[e]||m}
+  function roomBlob(i){var x=RITEMS[i];return roomGet(RDIR+'/f/'+x.f,RKEY).then(function(d){return new Blob([d],{type:mimeOf(x)||'application/octet-stream'})})}
   function roomOpen(i){var x=RITEMS[i];SEQ=null;$('pg').classList.remove('on');$('vw-t').textContent=x.title+' · 불러오는 중';$('vw').classList.add('on');
-    roomBlob(i).then(function(b){var m=x.mime||'';
-      if(m.indexOf('image')===0){var ph0=document.getElementById('pdfhold');if(ph0)ph0.style.display='none';$('vf').classList.add('hide');$('cv').classList.remove('hide');return createImageBitmap(b).then(function(img){paint(img,x.title)})}
+    roomBlob(i).then(function(b){var m=mimeOf(x),ph1=document.getElementById('pdfhold');if(ph1){ph1.style.display='none';ph1.innerHTML=''}
+      if(m.indexOf('image')===0&&m!=='image/heic'){var ph0=document.getElementById('pdfhold');if(ph0)ph0.style.display='none';$('vf').classList.add('hide');$('cv').classList.remove('hide');return createImageBitmap(b).then(function(img){paint(img,x.title)})}
       $('cv').classList.add('hide');var f=$('vf');f.classList.remove('hide');
       if(m==='application/pdf'){f.classList.add('hide');var st=$('vw-s'),hold=document.getElementById('pdfhold');if(!hold){hold=document.createElement('div');hold.id='pdfhold';hold.style.cssText='display:flex;min-height:100%';st.appendChild(hold)}hold.style.display='flex';spPdf(b,hold);$('vw-t').textContent=x.title}else if(m.indexOf('text')===0){f.src=URL.createObjectURL(b);$('vw-t').textContent=x.title}
-      else{f.removeAttribute('src');f.srcdoc='<p style="font:15px sans-serif;padding:30px;color:#555">이 파일은 미리보기가 되지 않습니다.</p>';$('vw-t').textContent=x.title}
+      else{f.removeAttribute('src');f.srcdoc='<p style="font:15px/1.7 sans-serif;padding:30px;color:#555">이 파일(한글·워드·엑셀·아이폰 HEIC 사진 등)은 화면 미리보기가 되지 않습니다.<br>[내려받기]로 여십시오.</p>';$('vw-t').textContent=x.title}
     }).catch(function(){$('vw-t').textContent='열지 못했습니다. 다시 눌러 주십시오.'})}
   document.addEventListener('click',function(e){
     var o=e.target.closest('[data-ro]'),d=e.target.closest('[data-rd]');
     if(o)roomOpen(+o.dataset.ro);
-    if(d){var i=+d.dataset.rd;roomBlob(i).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=RITEMS[i].name||RITEMS[i].title;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)})}
+    if(d){var i=+d.dataset.rd;roomBlob(i).catch(function(){alert('내려받지 못했습니다. 다시 눌러 주십시오.');throw 0}).then(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=RITEMS[i].name||RITEMS[i].title;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)})}
   });
 
   // 강사방
@@ -342,10 +343,10 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
     };
   }
   $('w-re').onclick=function(){location.reload()};
-  $('w-out').onclick=$('t-out').onclick=function(){sb.auth.signOut().then(function(){location.replace('member.html')})};
+  $('w-out').onclick=$('t-out').onclick=function(){sb.auth.signOut({scope:'local'}).then(function(){location.replace('member.html')})};
 
   $('b-kakao').onclick=function(){log('signup_start');sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+'/member.html'}})};
-  $('b-out').onclick=function(){sb.auth.signOut().then(function(){location.replace('member.html')})};
+  $('b-out').onclick=function(){sb.auth.signOut({scope:'local'}).then(function(){location.replace('member.html')})};
   $('b-del').onclick=function(){
     if(!confirm('소포스 회원 정보와 이용 기록을 삭제할까요? 삭제하면 되돌릴 수 없습니다.'))return;
     sb.rpc('sp_delete_me').then(function(r){ if(r.error){alert('삭제하지 못했습니다. 잠시 뒤 다시 시도해 주십시오.');return} sb.auth.signOut().then(function(){alert('삭제했습니다.');location.replace('/')}) });
@@ -474,6 +475,6 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 <script src="/js/pdfview.js"></script>
 <script src="/nav.js" defer></script>
 <script>window.JS_SITE='sophos'</script>
-<script src="assets/track.js?v=1"></script>
+<script src="assets/track.js?v=2"></script>
 </body>
 </html>

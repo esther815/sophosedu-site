@@ -5,7 +5,7 @@
     var SB_KEY='sb_publishable_Kj2bX4fe9CRSkhvGzBbaJw_y1ZqkjOz';
     var SITE=(window.JS_SITE==='sophos')?'sophos':'solomon';
     if(!window.supabase||!window.supabase.createClient) return;
-    var sb=window.supabase.createClient(SB_URL,SB_KEY);
+    var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'js-track'}});   // 집계 전용: 로그인 정보를 읽거나 갱신하지 않음(갱신이 겹치면 로그인이 풀림)
 
     var sid;
     try{ sid=localStorage.getItem('js_sid'); if(!sid){ sid=Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem('js_sid',sid); } }
