@@ -28,6 +28,12 @@ main{max-width:1180px;margin:0 auto;padding:30px 24px 70px}
 h2{margin:0 0 14px;font-family:'Noto Serif KR',serif;font-size:18px;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline}
 h2 small{font-family:'Noto Sans KR',sans-serif;font-weight:400;font-size:13px;color:var(--muted)}
 .panel{background:#fff;border:1px solid var(--line);padding:24px 26px;margin-bottom:22px}
+.nsg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.nsg div{border:1px solid var(--line);padding:12px 14px}.nsg b{display:block;font-size:22px;color:var(--wine)}.nsg span{font-size:13px;color:var(--muted)}
+.nsl{max-height:420px;overflow:auto;border-top:1px solid var(--line)}
+.nsr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.nsr span{color:var(--muted);font-size:13px}.nsr button,.nsb{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.nsr button.on{background:var(--wine);color:#fff;border-color:var(--wine)}.nsr i{font-style:normal;font-size:12px;color:var(--gold);margin-left:6px}
 .funnel{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .st{padding:20px 18px;border-right:1px solid var(--line);position:relative}
 .st:last-child{border-right:0}
@@ -195,7 +201,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function pct(a,b){return b?Math.round(a/b*100)+'%':'—'}
   function when(t){var d=new Date(t);return (d.getMonth()+1)+'.'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-  var KIND={click:'버튼',consult:'상담 예약',kakao:'카톡 상담',call:'전화',signup_start:'가입 시작',profile_done:'가입 완료',library_open:'서재 입장',sample_view:'교재 열람',brief_open:'입시 노트'};
+  var KIND={click:'버튼',consult:'상담 예약',kakao:'카톡 상담',call:'전화',signup_start:'가입 시작',profile_done:'가입 완료',library_open:'서재 입장',sample_view:'교재 열람',brief_open:'입시 노트',ns_on:'알림톡 구독',ns_off:'알림톡 해지'};
   function dist(obj,total){var k=Object.keys(obj||{}).sort(function(a,b){return obj[b]-obj[a]});if(!k.length)return '<p class="empty">아직 없습니다.</p>';
     var mx=Math.max.apply(null,k.map(function(x){return obj[x]}));
     return '<ul class="dist">'+k.map(function(x){return '<li><span>'+esc(x)+'</span><div class="tr"><div class="fl" style="width:'+(obj[x]/mx*100)+'%"></div></div><em>'+obj[x]+'</em></li>'}).join('')+'</ul>'}
@@ -329,6 +335,33 @@ h2{flex-wrap:wrap;gap:4px 14px}
         '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)"><button type="button" class="rlb" id="rlist">강사방 · 회원방에 올린 자료 보기</button><div id="rlbox"></div></div></section>';
     });
   }
+  // 입시 노트 알림톡 — 재원생 가족 승인 · 구독 현황 · 시험 발송
+  var NSM=[],NSQ='';
+  function nsPanel(site){
+    return Promise.all([sb.rpc('ns_admin_stats',{p_site:site}),sb.rpc('ns_admin_members',{p_site:site})]).then(function(a){
+      if(a[0].error)return '<section class="panel"><h2>입시 노트 알림톡</h2><p class="empty">알림톡 설정 SQL(supabase/입시노트_알림톡_설정.sql)을 실행하면 여기에 재원생 승인과 발송 현황이 나타납니다.</p></section>';
+      var t=a[0].data||{};NSM=a[1].data||[];
+      var rec=(t.recent||[]).map(function(x){return '<div class="nsr"><div>'+esc(x.news_id)+'<br><span>'+when(x.at)+'</span></div><span>보냄 '+x.sent+' · 실패 '+x.failed+(x.test?' · 시험 '+x.test:'')+'</span></div>'}).join('');
+      return '<section class="panel" id="nsp"><h2>입시 노트 알림톡 <small>재원생 가족으로 승인한 회원만 구독할 수 있습니다</small></h2>'+
+        '<div class="nsg"><div><b>'+(t.enrolled||0)+'</b><span>재원생 가족 승인</span></div><div><b>'+(t.subscribed||0)+'</b><span>알림톡 구독</span></div><div><b>'+(t.pending||0)+'</b><span>아침 8시 발송 대기</span></div></div>'+
+        '<p style="margin:0 0 14px"><button type="button" class="nsb" id="nst">최신 기사 시험 발송(원장님 휴대폰)</button> <span id="nstr" style="font-size:13px;color:var(--muted)"></span></p>'+
+        (rec?'<p style="margin:0 0 6px;font-weight:700;font-size:14px">최근 발송</p>'+rec+'<div style="height:16px"></div>':'')+
+        '<p style="margin:0 0 6px;font-weight:700;font-size:14px">회원 명단 <input id="nsq" placeholder="이름·학교 찾기" style="margin-left:8px;padding:5px 8px;border:1px solid var(--line);font:inherit;font-size:13px;font-weight:400"></p><div class="nsl" id="nsl">'+nsRows()+'</div></section>';
+    }).catch(function(){return ''});
+  }
+  function nsRows(){var q=NSQ.trim();var L=NSM.map(function(x,i){return [x,i]}).filter(function(p){var x=p[0];return !q||(String(x.nickname||'')+String(x.school||'')).indexOf(q)>=0});
+    if(!L.length)return '<p class="empty">회원이 없습니다.</p>';
+    return L.map(function(p){var x=p[0];return '<div class="nsr"><div>'+esc(x.nickname||'(이름 없음)')+(x.subscribed?'<i>구독 중</i>':'')+'<br><span>'+esc([x.role,x.grade,x.school].filter(Boolean).join(' · '))+'</span></div><button type="button" data-ne="'+p[1]+'" class="'+(x.enrolled?'on':'')+'">'+(x.enrolled?'재원생 가족 ✓':'재원생 가족으로 승인')+'</button></div>'}).join('')}
+  document.addEventListener('input',function(e){if(e.target.id==='nsq'){NSQ=e.target.value;document.getElementById('nsl').innerHTML=nsRows()}});
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-ne]');
+    if(b){var x=NSM[+b.dataset.ne];var on=!x.enrolled;if(!on&&!window.confirm(x.nickname+' 님의 재원생 승인을 해제할까요? 알림톡 구독도 함께 꺼집니다.'))return;
+      b.disabled=true;sb.rpc('ns_admin_set_enrolled',{p_user:x.user_id,p_site:'sophos',p_on:on}).then(function(r){b.disabled=false;if(r.error){alert('바꾸지 못했습니다.');return}x.enrolled=on;if(!on)x.subscribed=false;document.getElementById('nsl').innerHTML=nsRows()});return}
+    if(e.target.id==='nst'){var o=document.getElementById('nstr');o.textContent='보내는 중…';e.target.disabled=true;
+      sb.functions.invoke('news-dispatch',{body:{test:true,site:'sophos'}}).then(function(r){e.target.disabled=false;
+        if(r.error){o.textContent='보내지 못했습니다. 발송 함수와 비밀값 설정을 확인해 주십시오.';return}
+        var d=r.data||{};if(d.error){o.textContent=d.error;return}var v=d.test&&Object.values(d.test)[0];o.textContent=v&&v.ok?'보냈습니다. 휴대폰 카카오톡을 확인해 주십시오.':'실패: '+((v&&v.error)||'알 수 없음')})}
+  });
   var FIND='<section class="find"><div class="fi"><img src="img/find-192.png" alt=""><div><b>자료 찾기</b><span>주니어솔로몬 · 소포스에듀 · 포스터 자료의 위치를 한곳에 · claude.ai 원장님 계정으로만 열림</span></div></div><a href="https://claude.ai/artifact/Cp4SJsqoqrQP5dc4UXXAXP" target="_blank" rel="noopener">자료 찾기 열기 →</a></section>';
   var VIEW='lobby',BRAND='js',VL=null;
   function getVault(){if(!VL)VL=vault();return VL}
@@ -358,7 +391,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
     M.innerHTML='<p class="empty">불러오는 중…</p>';
     getVault().then(function(err){var vh=err||vaultView();
       if(VIEW==='js'){M.innerHTML=back()+vh;return}
-      Promise.all([sb.rpc('sp_funnel',{p_days:days}),rooms().catch(function(){return ''})]).then(function(a){var r=a[0],rh=a[1];if(VIEW!=='sp')return;if(r.error){M.innerHTML=back()+vh+rh;return}render(r.data);M.insertAdjacentHTML('afterbegin',back()+vh+rh)});
+      Promise.all([sb.rpc('sp_funnel',{p_days:days}),rooms().catch(function(){return ''}),nsPanel('sophos')]).then(function(a){var r=a[0],rh=a[1]+a[2];if(VIEW!=='sp')return;if(r.error){M.innerHTML=back()+vh+rh;return}render(r.data);M.insertAdjacentHTML('afterbegin',back()+vh+rh)});
     });
   }
   window.addEventListener('hashchange',function(){load();window.scrollTo(0,0)});

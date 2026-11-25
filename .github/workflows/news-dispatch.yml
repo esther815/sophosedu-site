@@ -1,0 +1,47 @@
+# 입시 노트가 main 에 올라가면 새 기사를 알림톡 발송 함수로 넘긴다.
+# 매일 08:05(KST)에는 밤사이 올라와 대기 중인 기사를 보낸다.
+# 저장소 Settings > Secrets and variables > Actions 에 두 값이 있어야 동작한다:
+#   NEWS_DISPATCH_URL     https://gyuuimwalbxsocnamtqk.supabase.co/functions/v1/news-dispatch
+#   NEWS_DISPATCH_SECRET  Supabase 함수의 DISPATCH_SECRET 과 같은 값
+name: news-dispatch
+on:
+  push:
+    branches: [main]
+    paths: [data/news.json]
+  schedule:
+    - cron: "5 23 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    if: ${{ vars.NEWS_DISPATCH_ENABLED != 'false' }}
+    env:
+      URL: ${{ secrets.NEWS_DISPATCH_URL }}
+      SECRET: ${{ secrets.NEWS_DISPATCH_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: 새 기사 찾기
+        if: github.event_name == 'push'
+        run: |
+          git show HEAD~1:data/news.json > /tmp/old.json 2>/dev/null || echo "[]" > /tmp/old.json
+          python3 - <<'PY'
+          import json
+          old = {x["id"] for x in json.load(open("/tmp/old.json"))}
+          new = [x for x in json.load(open("data/news.json")) if x["id"] not in old]
+          body = {"site": "sophos", "items": [{k: x[k] for k in ("id", "title", "points", "note")} for x in new]}
+          json.dump(body, open("/tmp/body.json", "w"), ensure_ascii=False)
+          print("새 기사:", [x["id"] for x in new])
+          PY
+      - name: 새 기사 넘기기
+        if: github.event_name == 'push' && env.URL != ''
+        run: |
+          if [ "$(python3 -c 'import json;print(len(json.load(open("/tmp/body.json"))["items"]))')" = "0" ]; then echo "새 기사 없음"; exit 0; fi
+          curl -sS --fail-with-body -X POST "$URL" -H "content-type: application/json" -H "x-dispatch-secret: $SECRET" --data @/tmp/body.json
+      - name: 야간 대기분 보내기
+        if: github.event_name != 'push' && env.URL != ''
+        run: |
+          curl -sS --fail-with-body -X POST "$URL" -H "content-type: application/json" -H "x-dispatch-secret: $SECRET" --data '{"flush":true}'

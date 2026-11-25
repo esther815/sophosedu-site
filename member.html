@@ -105,6 +105,16 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 .pvb{position:sticky;top:0;z-index:40;background:#FBF4E2;border-bottom:1px solid #E8D5A0;color:#7A5A12;font-size:14px;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .pvb a{color:#7A5A12;font-weight:700}
 .rm{margin-top:34px}
+.ns{margin-top:34px;background:#fff;border:1px solid var(--line);padding:24px 26px}
+.ns h2{margin:0 0 6px;font-family:'Noto Serif KR',serif;font-size:18px;color:var(--ink)}
+.ns p{margin:0 0 12px;font-size:14px;color:var(--muted)}
+.ns .st{font-size:14.5px;color:var(--text);margin-bottom:14px}
+.ns .st b{color:var(--wine)}
+.ns input[type=tel]{width:100%;max-width:280px;padding:11px 12px;border:1px solid var(--line);font:inherit;margin-bottom:10px}
+.ns .cs{display:block;font-size:13px;line-height:1.65;color:var(--muted);background:var(--paper);border:1px solid var(--line);padding:12px 14px;margin:4px 0 10px}
+.ns label.ck{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:14px}
+.ns .er{color:var(--rose);font-size:13.5px;min-height:1em;margin:0 0 8px}
+.ns .acts{display:flex;gap:10px;flex-wrap:wrap}
 .rm h2{font-family:var(--serif);font-size:20px;color:var(--ink);margin:0 0 12px}
 .rg{margin:18px 0 6px;font-size:12.5px;letter-spacing:.14em;color:var(--gold)}
 .ri{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -213,6 +223,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
     </div>
     <div class="notes" id="notes"></div>
     <div class="rm hide" id="mroom"></div>
+    <div class="ns hide" id="ns"></div>
     <div class="vols" id="vols"></div>
     <div class="adm" id="adm"><div><b>원장실</b><br><span style="font-size:14px">방문 · 가입 · 열람 · 상담 흐름과 관심 회원을 확인합니다.</span></div><a href="director.html">원장실 열기</a></div>
     <div class="me"><span id="who"></span><div class="acts">
@@ -397,11 +408,27 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
           var box=$('mroom');if(!items.length){box.classList.add('hide');return}
           box.innerHTML='<h2>'+esc(rl)+' 자료</h2>'+roomList(items,false);box.classList.remove('hide');
         });
-        show('v-lib');
+        show('v-lib');nsLoad();
         if(isAdm&&!ROOMNAME[AS]){$('adm').style.display='flex';$('vols').parentNode.insertBefore($('adm'),$('vols'))}
       });
     }).catch(function(){alert('서재를 여는 중 문제가 생겼습니다. 새로고침해 주십시오.');show('v-gate')});
   }
+
+  // 입시 노트 알림톡 구독 — 원장님이 재원생 가족으로 승인한 회원에게만 보인다
+  var NS_SITE='sophos';
+  var NS_CONSENT='[입시 노트 알림톡 수신 동의] 소포스에듀가 입시 노트 새 글(제목·세 줄 요약·소포스 노트)을 아래 휴대폰 번호로 카카오 알림톡으로 보내는 데 동의합니다. 수집 항목: 휴대폰 번호 · 이용 목적: 입시 노트 발송 · 보유 기간: 구독을 끄거나 회원 정보를 삭제할 때까지. 동의하지 않으셔도 되며, 그 경우 알림톡만 받지 않으실 뿐 다른 이용에는 제한이 없습니다.';
+  function nsRender(st){var b=$('ns');if(!st||!st.enrolled){b.classList.add('hide');return}
+    b.innerHTML='<h2>입시 노트 받아 보기</h2><p>재원생 가족께 드리는 서비스입니다. 입시 노트에 새 글이 올라오면 카카오 알림톡으로 보내 드립니다. 밤 9시 이후 올라온 글은 다음 날 아침 8시에 보냅니다.</p>'+
+      (st.on?'<div class="st">지금 <b>받고 계십니다</b> · '+esc(st.phone||'')+'</div><div class="acts"><button type="button" class="btn btn-l" id="ns-off">받지 않기</button><button type="button" class="btn btn-l" id="ns-chg">번호 바꾸기</button></div><div id="ns-f" class="hide"></div>'
+             :'<div id="ns-f"></div>');
+    var f=function(){$('ns-f').classList.remove('hide');$('ns-f').innerHTML='<input type="tel" id="ns-ph" inputmode="tel" maxlength="13" placeholder="010-0000-0000" aria-label="휴대폰 번호"><span class="cs">'+esc(NS_CONSENT)+'</span><label class="ck"><input type="checkbox" id="ns-ok"><span>위 내용을 읽었고 알림톡 수신에 동의합니다.</span></label><p class="er" id="ns-er" role="alert"></p><button type="button" class="btn btn-w" id="ns-on">알림톡 받기</button>';
+      $('ns-on').onclick=function(){var ph=$('ns-ph').value.replace(/[^0-9]/g,'');
+        if(!/^01[016789][0-9]{7,8}$/.test(ph)){$('ns-er').textContent='휴대폰 번호를 확인해 주십시오.';return}
+        if(!$('ns-ok').checked){$('ns-er').textContent='수신 동의에 표시해 주십시오.';return}
+        this.disabled=true;sb.rpc('ns_subscribe',{p_site:NS_SITE,p_phone:ph,p_on:true,p_consent:NS_CONSENT}).then(function(r){if(r.error){$('ns-er').textContent='저장하지 못했습니다. 잠시 뒤 다시 해 주십시오.';$('ns-on').disabled=false;return}log('ns_on');nsRender(r.data)})}};
+    if(!st.on)f();else{$('ns-chg').onclick=f;$('ns-off').onclick=function(){if(!window.confirm('입시 노트 알림톡을 그만 받으시겠습니까?'))return;sb.rpc('ns_subscribe',{p_site:NS_SITE,p_phone:'',p_on:false,p_consent:''}).then(function(r){if(!r.error){log('ns_off');nsRender(r.data)}})}}
+    b.classList.remove('hide')}
+  function nsLoad(){if(ROOMNAME[AS])return;sb.rpc('ns_my_status',{p_site:NS_SITE}).then(function(r){nsRender(r.error?null:r.data)})}
 
   $('notes').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;open(b.getAttribute('data-f'),b.getAttribute('data-t'))});
   var VOLS={},SEQ=null,SI=0;
