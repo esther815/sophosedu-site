@@ -127,6 +127,11 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
 .load{padding:80px 0;text-align:center;color:var(--muted);font-family:var(--latin);letter-spacing:.3em}
 @media (max-width:820px){.gate,.vols{grid-template-columns:1fr}.hd nav{display:none}form .row{grid-template-columns:1fr;gap:6px}form .row>label,form .row>.lb{padding-top:0}.card{padding:26px 20px}main{padding-top:40px}}
 @media print{body{display:none}}
+.ebadge{display:inline-block;vertical-align:middle;margin-left:10px;font:700 12px var(--sans);padding:4px 9px;background:#EFE6D8;color:var(--muted);letter-spacing:0}
+.ebadge.on{background:var(--wine2);color:#F3E3BE}
+.rm.er{margin-top:22px;padding:18px 18px 8px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--wine2)}
+.elock{margin-top:34px}.elock .lk{border:1.5px dashed var(--gold);background:#FFFCF6;padding:22px 18px;text-align:center}
+.elock .lk b{font:700 17px var(--serif);color:var(--wine)}.elock .lk p{font-size:14px;color:var(--muted);margin:8px 0 16px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -211,9 +216,11 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
       <div><p class="k">MEMBERS' LIBRARY</p><h1 id="lib-h1">회원 서재</h1>
       <p class="lead">회원 안내와 고원재 교재 맛보기를 모았습니다. 회원 열람용이며 내려받기와 인쇄는 할 수 없습니다.</p></div>
     </div>
+    <div class="rm er hide" id="eroom"></div>
     <div class="notes" id="notes"></div>
     <div class="rm hide" id="mroom"></div>
     <div class="vols" id="vols"></div>
+    <div class="elock hide" id="elock"><p class="rg">재원생 서재</p><div class="lk"><b>재원생에게만 열립니다</b><p>수업 자료 · 교재 전권 · 과제와 피드백 · 재원생 공지가 있습니다. 소포스에듀에 등록하시면 원장님이 열어 드립니다.</p><a class="btn btn-w" href="https://juniorsolomon.com/consult.html" target="_blank" rel="noopener" data-ev="consult_enr">상담 예약</a></div></div>
     <div class="adm" id="adm"><div><b>원장실</b><br><span style="font-size:14px">방문 · 가입 · 열람 · 상담 흐름과 관심 회원을 확인합니다.</span></div><a href="director.html">원장실 열기</a></div>
     <div class="me"><span id="who"></span><div class="acts">
       <a class="btn btn-l" href="https://juniorsolomon.com/consult.html" target="_blank" rel="noopener" data-ev="consult">상담 예약</a>
@@ -289,13 +296,13 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   function roomGet(path,k){return sb.storage.from('sp-room').download(path+'?t='+Date.now()).then(function(r){if(r.error)throw r.error;return r.data.arrayBuffer()}).then(function(b){return decWith(k,b)})}
   function roomIndex(dir,k){return roomGet(dir+'/index.bin',k).then(function(d){return JSON.parse(new TextDecoder().decode(d))}).catch(function(){return []})}
   function kb(n){return n>1048576?(n/1048576).toFixed(1)+'MB':Math.round((n||0)/1024)+'KB'}
-  function roomList(items,canDl){
-    var g={};items.forEach(function(x,i){(g[x.group||'자료']=g[x.group||'자료']||[]).push([x,i])});
+  function roomList(items,canDl,off){off=off||0;
+    var g={};items.forEach(function(x,i){i+=off;(g[x.group||'자료']=g[x.group||'자료']||[]).push([x,i])});
     return Object.keys(g).map(function(k){return '<p class="rg">'+esc(k)+'</p>'+g[k].map(function(p){var x=p[0];return '<div class="ri"><div><b>'+esc(x.title)+'</b><span>'+esc(x.t||'')+' · '+kb(x.size)+'</span></div><button type="button" data-ro="'+p[1]+'">보기</button>'+(canDl?'<button type="button" class="dl" data-rd="'+p[1]+'">내려받기</button>':'')+'</div>'}).join('')}).join('');
   }
   var RITEMS=[],RKEY=null,RDIR='';
   function mimeOf(x){var m=(x&&x.mime)||'';if(m&&m!=='application/octet-stream')return m;var e=String((x&&(x.name||x.title))||'').toLowerCase().split('.').pop();return {pdf:'application/pdf',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',heic:'image/heic',heif:'image/heic',txt:'text/plain'}[e]||m}
-  function roomBlob(i){var x=RITEMS[i];return roomGet(RDIR+'/f/'+x.f,RKEY).then(function(d){return new Blob([d],{type:mimeOf(x)||'application/octet-stream'})})}
+  function roomBlob(i){var x=RITEMS[i];return roomGet((x._d||RDIR)+'/f/'+x.f,x._k||RKEY).then(function(d){return new Blob([d],{type:mimeOf(x)||'application/octet-stream'})})}
   function roomOpen(i){var x=RITEMS[i];SEQ=null;$('pg').classList.remove('on');$('vw-t').textContent=x.title+' · 불러오는 중';$('vw').classList.add('on');
     roomBlob(i).then(function(b){var m=mimeOf(x),ph1=document.getElementById('pdfhold');if(ph1){ph1.style.display='none';ph1.innerHTML=''}
       if(m.indexOf('image')===0&&m!=='image/heic'){var ph0=document.getElementById('pdfhold');if(ph0)ph0.style.display='none';$('vf').classList.add('hide');$('cv').classList.remove('hide');return createImageBitmap(b).then(function(img){paint(img,x.title)})}
@@ -391,9 +398,16 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
         var rl=prof&&prof.role==='학생'?'학생방':prof&&prof.role==='학부모'?'학부모방':'회원 서재';
         $('lib-h1').textContent=rl;
         $('who').textContent=(prof&&prof.nickname?prof.nickname+' 님':'회원')+' · '+rl;
-        roomIndex('m',key).then(function(items){
-          var aud=prof&&prof.role;items=items.filter(function(x){return !x.aud||x.aud==='all'||x.aud===aud});
-          RITEMS=items;RKEY=key;RDIR='m';
+        var EK=sb.rpc('sp_enr_key').then(function(r){if(r.error||!r.data)return null;return crypto.subtle.importKey('raw',b64(r.data),{name:'AES-GCM'},false,['decrypt'])}).catch(function(){return null});
+        Promise.all([roomIndex('m',key),EK.then(function(ek){return ek?roomIndex('e',ek).then(function(L){return {k:ek,L:L}}):null})]).then(function(a){
+          var items=a[0],E=a[1],aud=prof&&prof.role;items=items.filter(function(x){return !x.aud||x.aud==='all'||x.aud===aud});
+          items.forEach(function(x){x._d='m';x._k=key});
+          var eItems=E?E.L:[];eItems.forEach(function(x){x._d='e';x._k=E.k});
+          RITEMS=items.concat(eItems);RKEY=key;RDIR='m';
+          var bd=document.getElementById('enr-badge');if(bd)bd.remove();
+          $('lib-h1').insertAdjacentHTML('beforeend','<span id="enr-badge" class="ebadge'+(E?' on':'')+'">'+(E?'재원생':'가입 회원')+'</span>');
+          var eb=$('eroom');if(E){eb.innerHTML='<h2>재원생 서재</h2>'+(eItems.length?roomList(eItems,false,items.length):'<p class="rg" style="letter-spacing:0;color:var(--muted)">아직 올라온 재원생 자료가 없습니다. 원장님이 올리시면 여기에 바로 보입니다.</p>');eb.classList.remove('hide');$('elock').classList.add('hide')}
+          else{eb.classList.add('hide');$('elock').classList.remove('hide')}
           var box=$('mroom');if(!items.length){box.classList.add('hide');return}
           box.innerHTML='<h2>'+esc(rl)+' 자료</h2>'+roomList(items,false);box.classList.remove('hide');
         });

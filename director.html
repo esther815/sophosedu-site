@@ -177,6 +177,12 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .find span{font-size:13.5px;color:#BFD3D0}
 .find a{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;background:#D9BE8A;color:#0B4F5B;font-weight:700;text-decoration:none;white-space:nowrap}
 .find a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.mb-lead{font-size:14px;color:var(--muted);margin:0 0 12px}.mb-lead b{color:var(--rose,#B8404D)}
+.mb-new{font:700 10.5px var(--sans,sans-serif);color:#B8404D;background:#FBE3E3;padding:2px 6px;margin-left:4px}
+.mb-c{display:inline-block;font:700 11.5px var(--sans,sans-serif);padding:3px 8px;background:#EFE6D8;color:#76666A;white-space:nowrap}.mb-c.on{background:#5C1A28;color:#F3E3BE}
+.mb-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 12px}.mb-sg{font:700 12.5px var(--sans,sans-serif);padding:6px 12px;border:1px solid #E4D7C4;background:#fff;color:#76666A;cursor:pointer}.mb-sg.on{background:#5C1A28;border-color:#5C1A28;color:#FBF7F0}.mb-f select{font:13px var(--sans,sans-serif);padding:6px 8px;border:1px solid #E4D7C4;background:#FBF7F0;color:#3B2E31}
+.mb-nm{margin-top:4px;font:12px var(--sans,sans-serif);padding:2px 7px;border:1px solid #E4D7C4;background:#FBF7F0;color:#A9824A;cursor:pointer}.mb-nmv{display:inline-block;margin-top:4px;color:#3E111B}
+.mb-b{font:700 12.5px var(--sans,sans-serif);padding:6px 10px;border:1px solid #5C1A28;color:#5C1A28;background:#fff;cursor:pointer;white-space:nowrap}.mb-b.off{border-color:#bbb;color:#888}
 </style>
 </head>
 <body>
@@ -207,6 +213,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
       '<p class="note">방문은 무작위 방문 번호 기준입니다(같은 사람의 다른 기기는 따로 셉니다). 상담 행동은 홈페이지·서재의 상담 버튼을 누른 수입니다.</p></section>';
     h+='<div class="grid"><section class="panel"><h2>연령대</h2>'+dist(r.by_age)+'</section><section class="panel"><h2>사는 곳</h2>'+dist(r.by_gu)+'</section>'+
        '<section class="panel"><h2>구분</h2>'+dist(r.by_role)+'</section><section class="panel"><h2>관심 과정</h2>'+dist(r.by_interest)+'</section></div>';
+    h+='<section class="panel" id="mbrs"><h2>회원 목록 <small>재원생 구분</small></h2><p class="empty">불러오는 중…</p></section>';
     var hot=r.hot||[];
     h+='<section class="panel"><h2>관심 회원 <small>상담 행동 · 교재 열람 순</small></h2>'+(hot.length?'<div class="tw"><table><tr><th>이름</th><th>구분 · 연령</th><th>사는 곳</th><th>학년</th><th>관심</th><th class="n">열람</th><th class="n">상담</th><th>마지막</th><th>소식</th></tr>'+
       hot.map(function(x){return '<tr><td><b>'+esc(x.nickname)+'</b></td><td>'+esc(x.role)+' · '+esc(x.age_band)+'</td><td>'+esc(x.gu)+(x.dong?' '+esc(x.dong):'')+'</td><td>'+esc(x.grade||'')+'</td><td>'+(x.interests||[]).map(function(i){return '<span class="tag">'+esc(i)+'</span>'}).join('')+'</td><td class="n">'+x.samples+'</td><td class="n'+(x.consults?' hot':'')+'">'+x.consults+'</td><td>'+when(x.last_at)+'</td><td>'+(x.marketing?'동의':'—')+'</td></tr>'}).join('')+'</table></div>':'<p class="empty">아직 없습니다.</p>')+'</section>';
@@ -247,23 +254,48 @@ h2{flex-wrap:wrap;gap:4px 14px}
         function box(g,groups){
           var gk=g===CG?'com':g.indexOf('외부 전달 금지')>=0?'int':g==='학부모 안내'?'ext':'etc';var gh=gk==='ext'?'<div class="vbh"><b>학부모 안내</b><span>학부모·외부에 그대로 드려도 되는 자료입니다</span></div>':gk==='com'?'<div class="vbh"><b>공통 자료</b><span>주니어솔로몬 · 소포스에듀 두 자료실에 함께 들어 있습니다</span></div>':gk==='int'?'<div class="vbh"><b>(주의) 강사용 기준 · 외부 전달 금지</b><span>강사에게만 주는 자료입니다. 학부모·외부로 보내지 마세요</span></div>':'<div class="vbh"><b>'+esc(g)+'</b></div>';if(groups[g].length>6&&groups[g].every(function(p){return /^image\//.test(p[0].mime||'')})){var tot=groups[g].reduce(function(t,p){return t+(p[0].size||0)},0);return '<section class="vbox '+gk+'">'+gh+'<div class="vi gal"><div><b>'+esc(g)+' · '+groups[g].length+'점</b><span>누르면 한 장씩 넘겨 보며 내려받기 · 카톡 전달 · 모두 '+kb(tot)+'</span></div><button type="button" class="open" data-vg="'+esc(g)+'">펼쳐 보기 →</button></div></section>'}return '<section class="vbox '+gk+'">'+gh+groups[g].map(function(p){var x=p[0];var iw=(x.group||'').indexOf('외부 전달 금지')>=0;return '<div class="vi'+(x.s?' three':'')+(iw?' iw':'')+'"><div><b>'+(iw?'<em class="warn">(주의)</em> ':'')+esc(x.title)+'</b><span>'+esc(x.note||x.name)+' · '+kb(x.size)+(x.s?' · 올린 날 '+esc(x.t||''):'')+'</span></div><button type="button" class="pv" data-vv="'+p[1]+'">보기</button><button type="button" class="dl" data-vd="'+p[1]+'">내려받기</button>'+(CAN_SHARE?'<button type="button" class="sh" data-vs="'+p[1]+'">카톡 전달</button>':'')+(x.s?'<button type="button" class="x" data-vx="'+p[1]+'" aria-label="지우기">지우기</button>':'')+'</div>'}).join('')+'</section>'}
         return '<section class="vault"><h2>'+(BRAND==='js'?'주니어솔로몬 자료실':'소포스에듀 자료실')+'</h2><div class="zj"><a href="#zt" class="zjt">강사에게 여는 자료</a><a href="#zd" class="zjd">원장 전용</a></div><div class="vg">'+zone(true)+zone(false)+'</div>'+
-          '<div class="vup"><p><b>파일 올리기</b><br><span style="font-size:13px;color:var(--muted)">사진 · PDF · 한글 · 워드 · 엑셀, <span style="white-space:nowrap">한 파일 50MB까지</span></span></p><div class="row"><label class="pick" for="vfile">파일 고르기</label><input type="file" id="vfile"><input type="text" id="vtitle" placeholder="이름 (비우면 파일 이름)"><select id="vto"><option value="vault">내 서류함 (나만)</option><option value="t">강사방</option><option value="m:all">학부모방 · 학생방 모두</option><option value="m:학부모">학부모방만</option><option value="m:학생">학생방만</option></select><select id="vgrp">'+GROUPS.map(function(g){return '<option'+(g==='기타 자료'?' selected':'')+'>'+esc(g)+'</option>'}).join('')+'</select><button type="button" id="vgo" disabled>올리기</button></div><p class="st2" id="vst">이 기기에서 잠근 뒤 올라갑니다. 내 서류함은 원장만, 강사방은 승인된 강사만, 학부모·학생방은 가입한 회원만 엽니다.</p></div></section>';
+          '<div class="vup"><p><b>파일 올리기</b><br><span style="font-size:13px;color:var(--muted)">사진 · PDF · 한글 · 워드 · 엑셀, <span style="white-space:nowrap">한 파일 50MB까지</span></span></p><div class="row"><label class="pick" for="vfile">파일 고르기</label><input type="file" id="vfile"><input type="text" id="vtitle" placeholder="이름 (비우면 파일 이름)"><select id="vto"><option value="vault">내 서류함 (나만)</option><option value="t">강사방</option><option value="e">재원생만</option><option value="m:all">학부모방 · 학생방 모두 (가입 회원 전체)</option><option value="m:학부모">학부모방만</option><option value="m:학생">학생방만</option></select><select id="vgrp">'+GROUPS.map(function(g){return '<option'+(g==='기타 자료'?' selected':'')+'>'+esc(g)+'</option>'}).join('')+'</select><button type="button" id="vgo" disabled>올리기</button></div><p class="st2" id="vst">이 기기에서 잠근 뒤 올라갑니다. 내 서류함은 원장만, 강사방은 승인된 강사만, 재원생만은 원장님이 재원생으로 지정한 회원만, 학부모·학생방은 가입한 회원 모두가 엽니다.</p></div></section>';
   }
   function mimeOf(x){var m=(x&&x.mime)||'';if(m&&m!=='application/octet-stream')return m;var e=String((x&&(x.name||x.title))||'').toLowerCase().split('.').pop();return {pdf:'application/pdf',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',heic:'image/heic',heif:'image/heic',txt:'text/plain'}[e]||m}
   function canImg(m){return m.indexOf('image')===0&&(m!=='image/heic'||(/safari/i.test(navigator.userAgent)&&!/chrome|crios|android/i.test(navigator.userAgent)))}
   var NOPV='<p style="color:#F1E3C3;margin:30px;line-height:1.7">이 파일(한글·워드·엑셀·아이폰 HEIC 사진 등)은 화면 미리보기가 되지 않습니다.<br>[내려받기]로 여십시오.</p>';
   function vblob(i){var x=vlist[i];return (x.s?sdec('f/'+x.f):vdec(x.f)).then(function(d){return new Blob([d],{type:mimeOf(x)||'application/octet-stream'})})}
   var RK={};
-  function roomKey(dir){if(RK[dir])return Promise.resolve(RK[dir]);return sb.rpc(dir==='t'?'sp_teacher_key':'sp_lib_key').then(function(r){if(r.error||!r.data)throw new Error(dir==='t'?'강사방 설정 SQL을 먼저 실행해 주십시오.':'서재 열쇠를 받지 못했습니다.');return crypto.subtle.importKey('raw',b64(r.data),{name:'AES-GCM'},false,['decrypt','encrypt'])}).then(function(k){RK[dir]=k;return k})}
+  function roomKey(dir){if(RK[dir])return Promise.resolve(RK[dir]);return sb.rpc(dir==='t'?'sp_teacher_key':dir==='e'?'sp_enr_key':'sp_lib_key').then(function(r){if(r.error||!r.data)throw new Error(dir==='t'?'강사방 설정 SQL을 먼저 실행해 주십시오.':dir==='e'?'재원생 설정 SQL을 먼저 실행해 주십시오.':'서재 열쇠를 받지 못했습니다.');return crypto.subtle.importKey('raw',b64(r.data),{name:'AES-GCM'},false,['decrypt','encrypt'])}).then(function(k){RK[dir]=k;return k})}
   function rEnc(k,buf){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,buf).then(function(c){var o=new Uint8Array(12+c.byteLength);o.set(iv,0);o.set(new Uint8Array(c),12);return new Blob([o],{type:'application/octet-stream'})})}
   function rPut(dir,path,buf){return roomKey(dir).then(function(k){return rEnc(k,buf)}).then(function(b){return sb.storage.from('sp-room').upload(dir+'/'+path,b,{upsert:true,contentType:'application/octet-stream',cacheControl:'0'})}).then(function(r){if(r.error)throw r.error})}
   function rIndex(dir){return roomKey(dir).then(function(k){return sb.storage.from('sp-room').download(dir+'/index.bin?t='+Date.now()).then(function(r){if(r.error)return [];return r.data.arrayBuffer().then(function(b){return crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(b.slice(0,12))},k,b.slice(12))}).then(function(d){return JSON.parse(new TextDecoder().decode(d))})}).catch(function(){return []})})}
   var AUD={all:'학부모·학생 모두','학부모':'학부모방만','학생':'학생방만'};
   function roomsList(){var box=document.getElementById('rlbox');box.innerHTML='<p class="empty">불러오는 중…</p>';
-    Promise.all([rIndex('t').catch(function(){return []}),rIndex('m').catch(function(){return []})]).then(function(a){
+    Promise.all([rIndex('t').catch(function(){return []}),rIndex('m').catch(function(){return []}),rIndex('e').catch(function(){return []})]).then(function(a){
       function sec(dir,name,list){return '<p class="g" style="margin-top:14px">'+name+'</p>'+(list.length?list.map(function(x){return '<div class="vi"><div><b>'+esc(x.title)+'</b><span>'+esc(x.group||'')+(dir==='m'?' · '+AUD[x.aud||'all']:'')+' · '+kb(x.size)+' · '+esc(x.t||'')+'</span></div><button type="button" class="x" data-rx="'+dir+'|'+esc(x.f)+'">지우기</button></div>'}).join(''):'<p class="empty">없습니다.</p>')}
-      box.innerHTML=sec('t','강사방',a[0])+sec('m','학부모방 · 학생방',a[1]);
+      box.innerHTML=sec('t','강사방',a[0])+sec('e','재원생 서재',a[2])+sec('m','학부모방 · 학생방',a[1]);
     })}
+
+  var MB=[],MF={st:'all',role:'',int:''};
+  function members(){var box=document.getElementById('mbrs');if(!box)return;
+    sb.rpc('sp_member_list').then(function(r){if(!document.getElementById('mbrs'))return;
+      if(r.error){box.innerHTML='<h2>회원 목록 <small>재원생 구분</small></h2><p class="empty">재원생 설정 SQL을 실행하면 여기에 회원 목록과 재원생 단추가 나옵니다.</p>';return}
+      MB=(r.data||[]).slice().sort(function(x,y){return new Date(y.created_at)-new Date(x.created_at)});mbDraw()})}
+  function mbDraw(){var box=document.getElementById('mbrs');if(!box)return;
+    var wk=Date.now()-7*864e5,nw=MB.filter(function(x){return new Date(x.created_at).getTime()>wk}).length,en=MB.filter(function(x){return x.enrolled}).length;
+    var ints=[];MB.forEach(function(x){(x.interests||[]).forEach(function(i){if(ints.indexOf(i)<0)ints.push(i)})});
+    var L=MB.filter(function(x){return (MF.st==='all'||(MF.st==='on')===!!x.enrolled)&&(!MF.role||x.role===MF.role)&&(!MF.int||(x.interests||[]).indexOf(MF.int)>=0)});
+    function seg(v,t){return '<button type="button" class="mb-sg'+(MF.st===v?' on':'')+'" data-mst="'+v+'">'+t+'</button>'}
+    box.innerHTML='<h2>회원 목록 <small>전체 '+MB.length+'명 · 재원생 '+en+'명</small></h2><p class="mb-lead">새 회원(최근 7일) <b>'+nw+'명</b> · 「재원생으로」를 누르면 그 회원에게 재원생 서재가 열립니다. 해제하면 바로 닫힙니다.</p>'+
+      '<div class="mb-f">'+seg('all','전체')+seg('on','재원생')+seg('off','비재원')+
+      '<select data-mrole><option value="">구분 전체</option>'+['학부모','학생','기타'].map(function(v){return '<option'+(MF.role===v?' selected':'')+'>'+v+'</option>'}).join('')+'</select>'+
+      '<select data-mint><option value="">관심 과정 전체</option>'+ints.map(function(v){return '<option'+(MF.int===v?' selected':'')+'>'+esc(v)+'</option>'}).join('')+'</select></div>'+
+      (L.length?'<div class="tw"><table class="mbt"><tr><th>구분</th><th>학년</th><th>관심 과정</th><th>가입일</th><th>상태</th><th></th></tr>'+L.map(function(x){var n=new Date(x.created_at).getTime()>wk;
+        return '<tr><td>'+esc(x.role)+(n?' <span class="mb-new">NEW</span>':'')+'<br><button type="button" class="mb-nm" data-mnm="'+esc(x.nickname||'이름 없음')+'">이름 보기</button></td><td>'+esc(x.grade||'')+'</td><td>'+(x.interests||[]).map(function(i){return '<span class="tag">'+esc(i)+'</span>'}).join('')+'</td><td>'+when(x.created_at)+'</td><td>'+(x.enrolled?'<span class="mb-c on">재원생</span>':'<span class="mb-c">가입 회원</span>')+'</td><td><button type="button" class="mb-b'+(x.enrolled?' off':'')+'" data-enr="'+x.id+'|'+(x.enrolled?0:1)+'">'+(x.enrolled?'해제':'재원생으로')+'</button></td></tr>'}).join('')+'</table></div>':'<p class="empty">'+(MB.length?'조건에 맞는 회원이 없습니다.':'아직 가입한 회원이 없습니다.')+'</p>');
+  }
+  document.addEventListener('click',function(e){
+    var sg=e.target.closest('[data-mst]');if(sg){MF.st=sg.dataset.mst;mbDraw();return}
+    var nm=e.target.closest('[data-mnm]');if(nm){nm.outerHTML='<b class="mb-nmv">'+esc(nm.dataset.mnm)+'</b>';return}
+    var b=e.target.closest('[data-enr]');if(!b)return;var p=b.dataset.enr.split('|'),on=p[1]==='1';
+    if(!on&&!window.confirm('이 회원을 재원생에서 해제할까요? 재원생 서재가 바로 닫힙니다.'))return;
+    b.disabled=true;sb.rpc('sp_set_enrolled',{p_id:p[0],p_on:on}).then(function(r){if(r.error){b.disabled=false;alert('바꾸지 못했습니다. '+r.error.message);return}members()})});
+  document.addEventListener('change',function(e){if(e.target.matches('[data-mrole]')){MF.role=e.target.value;mbDraw()}else if(e.target.matches('[data-mint]')){MF.int=e.target.value;mbDraw()}});
   function today(){var d=new Date();return d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate()}
   document.addEventListener('change',function(e){if(e.target.id==='vfile'){var f=e.target.files[0];document.getElementById('vgo').disabled=!f;document.getElementById('vst').textContent=f?f.name+' · '+kb(f.size):''}});
   document.addEventListener('click',function(e){
@@ -292,7 +324,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
       var to=document.getElementById('vto').value;
       if(to!=='vault'&&TGROUPS.indexOf(document.getElementById('vgrp').value)<0){st.textContent='원장 전용 갈래의 자료는 강사방·학부모방·학생방에 올릴 수 없습니다. 갈래를 바꾸거나 「내 서류함 (나만)」으로 올려 주십시오.';btn.disabled=false;return}
       if(to!=='vault'){var dir=to.charAt(0),aud=to.indexOf(':')>0?to.split(':')[1]:'';
-        f.arrayBuffer().then(function(buf){return rPut(dir,'f/'+id,buf)}).then(function(){return rIndex(dir)}).then(function(ix){var it={group:document.getElementById('vgrp').value,title:t.slice(0,80),name:f.name,mime:f.type||'application/octet-stream',size:f.size,f:id,t:today()};if(dir==='m')it.aud=aud;ix.push(it);return rPut(dir,'index.bin',new TextEncoder().encode(JSON.stringify(ix)))}).then(function(){st.textContent=(dir==='t'?'강사방':AUD[aud])+'에 올렸습니다.';btn.disabled=false;var b2=document.getElementById('rlbox');if(b2&&b2.innerHTML)roomsList()}).catch(function(err){btn.disabled=false;st.textContent='올리지 못했습니다. '+(err&&err.message?err.message:'')});
+        f.arrayBuffer().then(function(buf){return rPut(dir,'f/'+id,buf)}).then(function(){return rIndex(dir)}).then(function(ix){var it={group:document.getElementById('vgrp').value,title:t.slice(0,80),name:f.name,mime:f.type||'application/octet-stream',size:f.size,f:id,t:today()};if(dir==='m')it.aud=aud;ix.push(it);return rPut(dir,'index.bin',new TextEncoder().encode(JSON.stringify(ix)))}).then(function(){st.textContent=(dir==='t'?'강사방':dir==='e'?'재원생 서재':AUD[aud])+'에 올렸습니다.';btn.disabled=false;var b2=document.getElementById('rlbox');if(b2&&b2.innerHTML)roomsList()}).catch(function(err){btn.disabled=false;st.textContent='올리지 못했습니다. '+(err&&err.message?err.message:'')});
         return;
       }
       f.arrayBuffer().then(function(buf){return sput('f/'+id,buf)}).then(sindex).then(function(ix){ix.push({group:document.getElementById('vgrp').value,brand:BRAND,title:t.slice(0,80),name:f.name,mime:f.type||'application/octet-stream',size:f.size,f:id,t:today()});return sput('index.bin',new TextEncoder().encode(JSON.stringify(ix)))}).then(function(){st.textContent='올렸습니다.';refresh()}).catch(function(err){btn.disabled=false;st.textContent='올리지 못했습니다. '+(err&&err.message?err.message:'')});
@@ -358,7 +390,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
     M.innerHTML='<p class="empty">불러오는 중…</p>';
     getVault().then(function(err){var vh=err||vaultView();
       if(VIEW==='js'){M.innerHTML=back()+vh;return}
-      Promise.all([sb.rpc('sp_funnel',{p_days:days}),rooms().catch(function(){return ''})]).then(function(a){var r=a[0],rh=a[1];if(VIEW!=='sp')return;if(r.error){M.innerHTML=back()+vh+rh;return}render(r.data);M.insertAdjacentHTML('afterbegin',back()+vh+rh)});
+      Promise.all([sb.rpc('sp_funnel',{p_days:days}),rooms().catch(function(){return ''})]).then(function(a){var r=a[0],rh=a[1];if(VIEW!=='sp')return;if(r.error){M.innerHTML=back()+vh+rh;return}render(r.data);M.insertAdjacentHTML('afterbegin',back()+vh+rh);members()});
     });
   }
   window.addEventListener('hashchange',function(){load();window.scrollTo(0,0)});
