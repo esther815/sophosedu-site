@@ -431,7 +431,9 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
   // 소포스 저널 알림톡 구독 — 원장님이 재원생 가족으로 승인한 회원에게만 보인다
   var NS_SITE='sophos';
   var NS_CONSENT='[소포스 저널 알림톡 수신 동의] 소포스에듀가 소포스 저널 새 글(제목·세 줄 요약·소포스 노트)을 아래 휴대폰 번호로 카카오 알림톡으로 보내는 데 동의합니다. 수집 항목: 휴대폰 번호 · 이용 목적: 소포스 저널 발송 · 보유 기간: 구독을 끄거나 회원 정보를 삭제할 때까지. 동의하지 않으셔도 되며, 그 경우 알림톡만 받지 않으실 뿐 다른 이용에는 제한이 없습니다.';
-  function nsRender(st){var b=$('ns');if(!st||!st.enrolled){b.classList.add('hide');return}
+  function nsGo(){if(QS.get('ns')){var b=$('ns');setTimeout(function(){b.scrollIntoView({behavior:'smooth',block:'center'})},150)}}
+  function nsRender(st){var b=$('ns');if(!st){b.classList.add('hide');return}
+    if(!st.enrolled){b.innerHTML='<h2>소포스 저널 받아 보기</h2><p>재원생 가족께 드리는 서비스입니다. 소포스 저널에 새 글이 올라오면 카카오 알림톡으로 보내 드립니다.</p><div class="st">재원생 가족 확인이 아직 되지 않았습니다. 학원으로 말씀해 주시면 확인 후 바로 신청하실 수 있습니다.</div>';b.classList.remove('hide');nsGo();return}
     b.innerHTML='<h2>소포스 저널 받아 보기</h2><p>재원생 가족께 드리는 서비스입니다. 소포스 저널에 새 글이 올라오면 카카오 알림톡으로 보내 드립니다. 밤 9시 이후 올라온 글은 다음 날 아침 8시에 보냅니다.</p>'+
       (st.on?'<div class="st">지금 <b>받고 계십니다</b> · '+esc(st.phone||'')+'</div><div class="acts"><button type="button" class="btn btn-l" id="ns-off">받지 않기</button><button type="button" class="btn btn-l" id="ns-chg">번호 바꾸기</button></div><div id="ns-f" class="hide"></div>'
              :'<div id="ns-f"></div>');
@@ -441,7 +443,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--gold-l);outline-offs
         if(!$('ns-ok').checked){$('ns-er').textContent='수신 동의에 표시해 주십시오.';return}
         this.disabled=true;sb.rpc('ns_subscribe',{p_site:NS_SITE,p_phone:ph,p_on:true,p_consent:NS_CONSENT}).then(function(r){if(r.error){$('ns-er').textContent='저장하지 못했습니다. 잠시 뒤 다시 해 주십시오.';$('ns-on').disabled=false;return}log('ns_on');nsRender(r.data)})}};
     if(!st.on)f();else{$('ns-chg').onclick=f;$('ns-off').onclick=function(){if(!window.confirm('소포스 저널 알림톡을 그만 받으시겠습니까?'))return;sb.rpc('ns_subscribe',{p_site:NS_SITE,p_phone:'',p_on:false,p_consent:''}).then(function(r){if(!r.error){log('ns_off');nsRender(r.data)}})}}
-    b.classList.remove('hide')}
+    b.classList.remove('hide');nsGo()}
   function nsLoad(){if(ROOMNAME[AS])return;sb.rpc('ns_my_status',{p_site:NS_SITE}).then(function(r){nsRender(r.error?null:r.data)})}
 
   $('notes').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;open(b.getAttribute('data-f'),b.getAttribute('data-t'))});
