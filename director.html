@@ -201,7 +201,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function pct(a,b){return b?Math.round(a/b*100)+'%':'—'}
   function when(t){var d=new Date(t);return (d.getMonth()+1)+'.'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-  var KIND={click:'버튼',consult:'상담 예약',kakao:'카톡 상담',call:'전화',signup_start:'가입 시작',profile_done:'가입 완료',library_open:'서재 입장',sample_view:'교재 열람',brief_open:'입시 노트'};
+  var KIND={click:'버튼',consult:'상담 예약',kakao:'카톡 상담',call:'전화',signup_start:'가입 시작',profile_done:'가입 완료',library_open:'서재 입장',sample_view:'교재 열람',brief_open:'소포스 저널'};
   function dist(obj,total){var k=Object.keys(obj||{}).sort(function(a,b){return obj[b]-obj[a]});if(!k.length)return '<p class="empty">아직 없습니다.</p>';
     var mx=Math.max.apply(null,k.map(function(x){return obj[x]}));
     return '<ul class="dist">'+k.map(function(x){return '<li><span>'+esc(x)+'</span><div class="tr"><div class="fl" style="width:'+(obj[x]/mx*100)+'%"></div></div><em>'+obj[x]+'</em></li>'}).join('')+'</ul>'}
