@@ -234,6 +234,21 @@ section[id]{scroll-margin-top:84px}
 .dsb-nav .dsb-x{background:#5C1A28;border-color:#5C1A28;color:#F6EDDA;font-weight:700}
 .dsb-nav button:disabled{opacity:.35;cursor:default}
 .dsb-n{font-family:'Cormorant Garamond',serif;letter-spacing:.14em;color:#7A5A36;font-size:15px}
+/* 작가 넘김 책: 화면 크기를 절반으로(2026-11-27 원장 지시) */
+.dsb{width:50%;min-width:270px;max-width:300px;padding:8px;margin:0 4px 4px 0;box-shadow:0 1px 0 #fff inset,0 10px 22px rgba(62,17,27,.14),3px 3px 0 -1px #E4D3B2,3px 3px 0 0 #CDB38A}
+.dsb::before{inset:4px}
+.dsb-title{padding:8px 14px 7px;outline-offset:3px}
+.dsb-title .dsb-brush{width:clamp(100px,12vw,140px)}
+.dsb-title span{font-size:10px}
+.dsb-mono{font-size:clamp(30px,3.5vw,43px)}
+.dsb-rule{width:45px}.dsb-pn{font-size:12px}.dsb-plate{gap:8px}
+.dsb-txt{padding:10px 11px 11px}
+.dsb-k{font-size:10.5px}.dsb-txt h4{font-size:15px}.dsb-txt h4 small{font-size:12px}
+.dsb-intro{margin-top:6px;font-size:12.5px;line-height:1.65}
+.dsb-works{margin-top:7px;font-size:12px;line-height:1.6}.dsb-works b{font-size:10.5px}
+.dsb-hint{margin-top:7px;font-size:11.5px}
+.dsb-nav{gap:6px;margin-top:7px}.dsb-nav button{font-size:12.5px;padding:0 10px}.dsb-n{font-size:12px}
+@media (max-width:900px){.dsb{margin-left:auto;margin-right:auto}}
 .oldbook{position:relative;margin:0 7px 7px 0;padding:14px;background:#EFE2C8;border:1px solid #CDB38A;box-shadow:0 1px 0 #fff inset,0 18px 40px rgba(62,17,27,.16),6px 6px 0 -1px #E4D3B2,6px 6px 0 0 #CDB38A}
 .oldbook::before{content:"";position:absolute;inset:7px;border:1px solid rgba(140,98,52,.45);pointer-events:none;z-index:1}
 .oldbook img{display:block;width:100%;filter:none!important}
