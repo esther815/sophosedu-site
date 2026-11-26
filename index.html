@@ -1170,25 +1170,36 @@ footer .bar{margin-top:56px;height:12px}
   function hid(id){try{return localStorage.getItem('sp_ep_'+id)===today}catch(e){return false}}
   var list=EV.filter(function(e){return today<=e.until&&!e.soldout&&!hid(e.id)});
   if(!list.length)return;
-  function build(){
-    var w=document.createElement('div');w.className='ep-wrap';w.setAttribute('role','dialog');w.setAttribute('aria-label','소포스에듀 소식');
-    list.forEach(function(e){
-      var c=document.createElement('div');c.className='ep';
-      c.innerHTML='<div class="vis"><span class="tag">'+e.tag+'</span><img class="'+e.kind+'" src="'+e.img+'" alt=""></div>'+
-        '<div class="bd"><p class="k">'+e.k+'</p><h3>'+e.h+'</h3><p class="t">'+e.t+'</p><p class="s">'+e.s+'</p></div>'+
-        '<a class="go" href="'+e.href+'"'+(e.href.charAt(0)==='#'?'':' target="_blank" rel="noopener"')+'>'+e.go+'</a>'+
-        '<div class="bar"><button type="button" class="today">오늘 하루 보지 않기</button><button type="button" class="x">닫기 ✕</button></div>';
-      function close(){c.remove();if(!w.querySelector('.ep'))w.remove()}
-      c.querySelector('.today').onclick=function(){try{localStorage.setItem('sp_ep_'+e.id,today)}catch(_){}close()};
-      c.querySelector('.x').onclick=close;
-      c.querySelector('.go').addEventListener('click',function(){if(e.href.charAt(0)==='#')w.remove()});
-      w.appendChild(c);
-    });
-    w.addEventListener('click',function(ev){if(ev.target===w)w.remove()});
-    document.addEventListener('keydown',function k(ev){if(ev.key==='Escape'){w.remove();document.removeEventListener('keydown',k)}});
-    document.body.appendChild(w);
+  // 소개 영상을 먼저 보여 준 뒤(첫 재생이 끝나면) 소식 창을 한 번에 하나씩 띄운다
+  function show(i){
+    if(i>=list.length)return;
+    var e=list[i],w=document.createElement('div');w.className='ep-wrap';w.setAttribute('role','dialog');w.setAttribute('aria-label','소포스에듀 소식');
+    var c=document.createElement('div');c.className='ep';
+    c.innerHTML='<div class="vis"><span class="tag">'+e.tag+'</span><img class="'+e.kind+'" src="'+e.img+'" alt=""></div>'+
+      '<div class="bd"><p class="k">'+e.k+'</p><h3>'+e.h+'</h3><p class="t">'+e.t+'</p><p class="s">'+e.s+'</p></div>'+
+      '<a class="go" href="'+e.href+'"'+(e.href.charAt(0)==='#'?'':' target="_blank" rel="noopener"')+'>'+e.go+'</a>'+
+      '<div class="bar"><button type="button" class="today">오늘 하루 보지 않기</button><button type="button" class="x">닫기 ✕</button></div>';
+    var done=false;
+    function next(){if(done)return;done=true;document.removeEventListener('keydown',k);w.remove();show(i+1)}
+    function k(ev){if(ev.key==='Escape')next()}
+    c.querySelector('.today').onclick=function(){try{localStorage.setItem('sp_ep_'+e.id,today)}catch(_){}next()};
+    c.querySelector('.x').onclick=next;
+    c.querySelector('.go').addEventListener('click',function(){if(e.href.charAt(0)==='#'){done=true;document.removeEventListener('keydown',k);w.remove()}});
+    w.addEventListener('click',function(ev){if(ev.target===w)next()});
+    document.addEventListener('keydown',k);
+    w.appendChild(c);document.body.appendChild(w);
   }
-  if(document.readyState==='complete')setTimeout(build,500);else window.addEventListener('load',function(){setTimeout(build,500)});
+  var started=false;
+  function begin(){if(started)return;started=true;setTimeout(function(){show(0)},400)}
+  function arm(){
+    var v=document.querySelector('#showreel video');
+    if(!v){begin();return}
+    v.addEventListener('ended',begin);
+    v.addEventListener('timeupdate',function(){if(v.duration&&v.currentTime>=v.duration-0.4)begin()});
+    setTimeout(function(){if(v.paused)begin()},4000);   // 자동 재생이 막힌 경우
+    setTimeout(begin,26000);                            // 최대 대기
+  }
+  if(document.readyState==='complete')arm();else window.addEventListener('load',arm);
 })();
 </script>
 
