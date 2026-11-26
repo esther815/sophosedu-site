@@ -1170,7 +1170,7 @@ footer .bar{margin-top:56px;height:12px}
   function hid(id){try{return localStorage.getItem('sp_ep_'+id)===today}catch(e){return false}}
   var list=EV.filter(function(e){return today<=e.until&&!e.soldout&&!hid(e.id)});
   if(!list.length)return;
-  // 소개 영상을 먼저 보여 준 뒤(첫 재생이 끝나면) 소식 창을 한 번에 하나씩 띄운다
+  // 소개 영상을 먼저 보여 준 뒤(7초 뒤) 소식 창을 한 번에 하나씩 띄운다
   function show(i){
     if(i>=list.length)return;
     var e=list[i],w=document.createElement('div');w.className='ep-wrap';w.setAttribute('role','dialog');w.setAttribute('aria-label','소포스에듀 소식');
@@ -1191,14 +1191,7 @@ footer .bar{margin-top:56px;height:12px}
   }
   var started=false;
   function begin(){if(started)return;started=true;setTimeout(function(){show(0)},400)}
-  function arm(){
-    var v=document.querySelector('#showreel video');
-    if(!v){begin();return}
-    v.addEventListener('ended',begin);
-    v.addEventListener('timeupdate',function(){if(v.duration&&v.currentTime>=v.duration-0.4)begin()});
-    setTimeout(function(){if(v.paused)begin()},4000);   // 자동 재생이 막힌 경우
-    setTimeout(begin,26000);                            // 최대 대기
-  }
+  function arm(){setTimeout(begin,7000)}   // 영상을 7초 본 뒤 첫 창
   if(document.readyState==='complete')arm();else window.addEventListener('load',arm);
 })();
 </script>
