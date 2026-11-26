@@ -1,4 +1,4 @@
--- 입시 노트 · 교육 노트 알림톡 구독 발송 설정
+-- 소포스 저널 · 교육 노트 알림톡 구독 발송 설정
 -- Supabase 대시보드 > SQL Editor 에 통째로 붙여 넣고 한 번 실행한다. 여러 번 실행해도 안전하다.
 -- 소포스(site='sophos')와 주니어솔로몬(site='solomon')이 같은 표를 함께 쓴다.
 -- 전제: public.sp_profiles(id, nickname, role, grade, school) 와 public.is_admin() 이 이미 있다.

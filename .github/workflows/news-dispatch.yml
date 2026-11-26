@@ -1,4 +1,4 @@
-# 입시 노트가 main 에 올라가면 새 기사를 알림톡 발송 함수로 넘긴다.
+# 소포스 저널가 main 에 올라가면 새 기사를 알림톡 발송 함수로 넘긴다.
 # 매일 08:05(KST)에는 밤사이 올라와 대기 중인 기사를 보낸다.
 # 저장소 Settings > Secrets and variables > Actions 에 두 값이 있어야 동작한다:
 #   NEWS_DISPATCH_URL     https://gyuuimwalbxsocnamtqk.supabase.co/functions/v1/news-dispatch

@@ -1,4 +1,4 @@
-"""소포스 입시 노트(brief.html) 생성 + 홈페이지 미리보기 조각 생성.
+"""소포스 저널(brief.html) 생성 + 홈페이지 미리보기 조각 생성.
 news.json 한 파일만 고치면 페이지와 홈페이지 미리보기가 함께 바뀐다."""
 import json, html, sys, base64, datetime, os
 ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))  # 저장소 맨 위 폴더
@@ -31,13 +31,13 @@ def page(icon_src, home_href):
     top3 = ''.join(f'<li><a href="#{E(x["id"])}"><span>{E(x["cat"])}</span>{E(x["title"])}</a></li>' for x in items[:3])
     chips = ''.join(f'<button type="button" class="chip" data-f="{c}" aria-pressed="{"true" if c=="전체" else "false"}">{c}</button>' for c in CATS)
     cards = '\n'.join(card(x) for x in items)
-    ld = json.dumps({"@context": "https://schema.org", "@type": "CollectionPage", "name": "소포스 입시 노트",
+    ld = json.dumps({"@context": "https://schema.org", "@type": "CollectionPage", "name": "소포스 저널",
                      "description": "중·고등 학부모를 위한 입시·교육 뉴스 요약", "publisher": {"@type": "EducationalOrganization", "name": "소포스에듀"}}, ensure_ascii=False)
     return f'''<!DOCTYPE html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>소포스 입시 노트 | 중·고등 입시·교육 뉴스 세 줄 요약 · 소포스에듀</title>
+<title>소포스 저널 | 중·고등 입시·교육 뉴스 세 줄 요약 · 소포스에듀</title>
 <meta name="description" content="중·고등 학부모가 꼭 알아야 할 입시·교육 뉴스를 소포스에듀가 골라 세 줄로 정리합니다. 2028 대입, 내신 5등급제, 수능, 고입 소식.">
-<meta property="og:title" content="소포스 입시 노트 · 제목만 읽어도 알 수 있게">
+<meta property="og:title" content="소포스 저널 · 제목만 읽어도 알 수 있게">
 <meta property="og:description" content="입시·교육 뉴스를 세 줄로 정리합니다.">
 <meta name="theme-color" content="#3E111B"><link rel="icon" href="img/favicon.ico?v=2" sizes="any"><link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2"><meta property="og:image" content="https://sophosedu.co.kr/img/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,9 +84,9 @@ footer{{margin-top:70px;padding:34px 0 50px;border-top:1px solid var(--line);fon
 </style></head><body>
 <header class="hd"><div class="wrap"><a class="brand" href="{home_href}"><img src="{icon_src}" alt=""><span><b>Sophos Edu</b><span>소포스에듀</span></span></a><a class="back" href="{home_href}">홈으로 →</a></div></header>
 <main class="wrap">
-<section class="mast"><p class="k">SOPHOS BRIEF</p><h1>소포스 입시 노트</h1><p>학부모가 꼭 알아야 할 입시·교육 뉴스를 골라, 제목만 읽어도 알 수 있게 정리합니다.</p><div class="rule"></div></section>
+<section class="mast"><p class="k">SOPHOS JOURNAL</p><h1>소포스 저널</h1><p>학부모가 꼭 알아야 할 입시·교육 뉴스를 골라, 제목만 읽어도 알 수 있게 정리합니다.</p><div class="rule"></div></section>
 <section class="top3" aria-label="최근 소식 세 줄"><p>LATEST · 최근 세 줄</p><ol>{top3}</ol></section>
-<div class="tools"><div class="chips" role="group" aria-label="분류">{chips}</div><input class="q" type="search" placeholder="검색 (예: 5등급, 정시)" aria-label="입시 노트 검색"></div>
+<div class="tools"><div class="chips" role="group" aria-label="분류">{chips}</div><input class="q" type="search" placeholder="검색 (예: 5등급, 정시)" aria-label="소포스 저널 검색"></div>
 <section id="list">{cards}</section>
 <p class="empty" id="empty">해당하는 소식이 아직 없습니다.</p>
 <footer>요약과 소포스 노트는 소포스에듀가 기사를 읽고 정리한 것입니다. 정확한 내용은 각 원문 기사에서 확인해 주세요.<br>© 소포스에듀. 무단 복제·전재·배포·변형 및 생성형 AI를 이용한 학습·분석·유사·파생 콘텐츠 제작을 금합니다.<br>위반 시 관련 법령에 따른 책임을 물을 수 있습니다.</footer>

@@ -1,4 +1,4 @@
-"""입시 노트 갱신: data/news.json → brief.html 다시 만들기 + index.html 첫 화면 '입시 노트' 미리보기(최신 3건) 교체.
+"""소포스 저널 갱신: data/news.json → brief.html 다시 만들기 + index.html 첫 화면 '소포스 저널' 미리보기(최신 3건) 교체.
 실행: 저장소 맨 위 폴더에서  python3 tools/update_brief.py"""
 import os, re, sys, subprocess, json, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

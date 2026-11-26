@@ -1,4 +1,4 @@
-// 입시 노트 · 교육 노트 알림톡 발송 (Supabase Edge Function: news-dispatch)
+// 소포스 저널 · 교육 노트 알림톡 발송 (Supabase Edge Function: news-dispatch)
 //
 // 호출하는 곳
 //  1) GitHub Actions — 기사가 main 에 올라가면 새 기사를 넘긴다.  헤더 x-dispatch-secret
