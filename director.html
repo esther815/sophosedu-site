@@ -170,7 +170,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
 .door{background:#fff;border:1px solid var(--line);padding:18px 10px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font:inherit;color:var(--ink)}
 .door svg{width:86px;height:auto}.door b{font-family:'Noto Serif KR',serif;font-size:16px}.door span{font-size:12.5px;color:var(--muted);min-height:16px}
 .door:active{transform:translateY(1px)}
-.backbar{display:flex;align-items:center;gap:12px;margin:4px 0 14px}.backbar button{border:1px solid var(--line);background:#fff;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}.backbar b{font-family:'Noto Serif KR',serif;font-size:18px;color:var(--ink)}
+.backbar{display:flex;align-items:center;gap:12px;margin:4px 0 14px;flex-wrap:wrap}.backbar button,.backbar a{border:1px solid var(--line);background:#fff;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer;text-decoration:none;color:inherit;display:inline-block}.backbar b{font-family:'Noto Serif KR',serif;font-size:18px;color:var(--ink)}
 .find{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#0B4F5B;color:#D9E6E4;padding:16px 20px;margin-bottom:22px;border:1px solid #10687A}
 .find .fi{display:flex;align-items:center;gap:14px}.find img{width:46px;height:46px;border-radius:11px;flex:none}
 .find b{display:block;font-family:'Noto Serif KR',serif;font-size:19px;color:#fff;font-weight:700}
@@ -227,7 +227,7 @@ h2{flex-wrap:wrap;gap:4px 14px}
   // 내 서류함 — 원장·관리자 전용 열쇠로만 열림
   // 기본 서류: vault/*.bin(공개 저장소, 암호화) · 올린 자료: Supabase 비공개 보관함 sp-vault(원장만 접근, 올리기 전에 이 기기에서 암호화)
   var CAN_SHARE=(function(){try{return !!(navigator.canShare&&navigator.canShare({files:[new File(['x'],'x.pdf',{type:'application/pdf'})]}))}catch(e){return false}})();
-  var vkey=null, vlist=[], BK='sp-vault', TGROUPS=['방학특강','한 바닥 쓰기 활동지','원고지','진단 · 심사','리포트 · 결과지','고원재 교재 양식','강사용 기준 · 외부 전달 금지','학부모 안내','포스터 · 홍보물','공지','수업 일정','수업 자료'],DGROUPS=['도장','강연 · 정산','설계 원본','사진 · 로고','독서상우 초상','정산 서류','외부 전달용','내부용 · 외부 전달 금지','기타 자료'],GROUPS=TGROUPS.concat(DGROUPS.filter(function(g){return ['정산 서류','외부 전달용','내부용 · 외부 전달 금지'].indexOf(g)<0}));
+  var vkey=null, vlist=[], BK='sp-vault', TGROUPS=['방학특강','한 바닥 쓰기 활동지','원고지','진단 · 심사','리포트 · 결과지','고원재 교재 양식','강사용 기준 · 외부 전달 금지','학부모 안내','포스터 · 홍보물','공지','수업 일정','수업 자료'],DGROUPS=['교재 원본 · 원장 전용(고원재·IBL·방특)','도장','강연 · 정산','설계 원본','사진 · 로고','독서상우 초상','정산 서류','외부 전달용','내부용 · 외부 전달 금지','기타 자료'],GROUPS=TGROUPS.concat(DGROUPS.filter(function(g){return ['정산 서류','외부 전달용','내부용 · 외부 전달 금지'].indexOf(g)<0}));
   function b64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
   function decBuf(buf){return crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(buf.slice(0,12))},vkey,buf.slice(12))}
   function encBuf(buf){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},vkey,buf).then(function(c){var o=new Uint8Array(12+c.byteLength);o.set(iv,0);o.set(new Uint8Array(c),12);return new Blob([o],{type:'application/octet-stream'})})}
@@ -387,15 +387,15 @@ h2{flex-wrap:wrap;gap:4px 14px}
      '<span class="enter">'+DOORSP+'<em>자료실 들어가기</em>'+(vlist.length?'<i>'+cnt('sp')+'점</i>':'')+'<u>→</u></span></button>'+
      '</section>';
   }
-  function back(){return '<div class="backbar"><button type="button" data-back="1">‹ 원장실로</button></div>'}
+  function back(brand){return '<div class="backbar"><button type="button" data-back="1">‹ 원장실로</button>'+(brand==='sp'?'<a href="https://solomon-quest.jrsolomoncom.workers.dev" target="_blank" rel="noopener">주니어솔로몬 교재함(인쇄) →</a>':'')+'</div>'}
   function load(){
     var hv=(location.hash||'').replace('#','');VIEW=(hv==='js'||hv==='sp')?hv:'lobby';if(VIEW!=='lobby')BRAND=VIEW;
     document.getElementById('seg').style.display=VIEW==='sp'?'':'none';
     if(VIEW==='lobby'){M.innerHTML=lobby();getVault().then(function(){if(VIEW==='lobby')M.innerHTML=lobby()});return}
     M.innerHTML='<p class="empty">불러오는 중…</p>';
     getVault().then(function(err){var vh=err||vaultView();
-      if(VIEW==='js'){M.innerHTML=back()+vh;return}
-      Promise.all([sb.rpc('sp_funnel',{p_days:days}),rooms().catch(function(){return ''})]).then(function(a){var r=a[0],rh=a[1];if(VIEW!=='sp')return;if(r.error){M.innerHTML=back()+vh+rh;return}render(r.data);M.insertAdjacentHTML('afterbegin',back()+vh+rh);members()});
+      if(VIEW==='js'){M.innerHTML=back(VIEW)+vh;return}
+      Promise.all([sb.rpc('sp_funnel',{p_days:days}),rooms().catch(function(){return ''})]).then(function(a){var r=a[0],rh=a[1];if(VIEW!=='sp')return;if(r.error){M.innerHTML=back(VIEW)+vh+rh;return}render(r.data);M.insertAdjacentHTML('afterbegin',back(VIEW)+vh+rh);members()});
     });
   }
   window.addEventListener('hashchange',function(){load();window.scrollTo(0,0)});
